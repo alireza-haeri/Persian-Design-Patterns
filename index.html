@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الگوهای طراحی نرم‌افزار | Design Patterns</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --accent-color: #ec4899;
+            --bg-color: #ffffff;
+            --surface-color: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #818cf8;
+            --secondary-color: #a78bfa;
+            --accent-color: #f472b6;
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --border-color: #334155;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.8;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="%23ffffff"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="%23ffffff"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%23ffffff"/></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.1;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .section {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+        }
+
+        .patterns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .pattern-card {
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pattern-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .pattern-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+
+        .pattern-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .pattern-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .pattern-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .pattern-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .pattern-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateX(-3px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        footer {
+            background: var(--surface-color);
+            border-top: 2px solid var(--border-color);
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        footer p {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .footer-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .patterns-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .badge-creational {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-color);
+        }
+
+        .badge-structural {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .badge-behavioral {
+            background: rgba(236, 72, 153, 0.1);
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="تغییر تم">
+        <span id="theme-icon">🌙</span>
+    </button>
+
+    <header>
+        <div class="container">
+            <h1>🎨 الگوهای طراحی نرم‌افزار</h1>
+            <p>مرجع کامل 22 الگوی طراحی کلاسیک با مثال‌های C# و نمودارهای Mermaid</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Creational Patterns -->
+        <section class="section">
+            <h2 class="section-title">
+                <span>1️⃣</span>
+                <span>الگوهای سازنده (Creational Patterns)</span>
+            </h2>
+            <p class="section-subtitle">
+                الگوهایی که مکانیزم‌های ایجاد شیء را فراهم می‌کنند و انعطاف‌پذیری و استفاده مجدد از کد را افزایش می‌دهند.
+            </p>
+            <div class="patterns-grid">
+                <div class="pattern-card" onclick="location.href='./Factory-Method/index.html'">
+                    <span class="category-badge badge-creational">سازنده</span>
+                    <div class="pattern-icon">🏭</div>
+                    <h3 class="pattern-title">Factory Method</h3>
+                    <p class="pattern-description">تعریف رابط برای ایجاد اشیاء، با اختیار تصمیم‌گیری به زیرکلاس‌ها</p>
+                    <div class="pattern-links">
+                        <a href="./Factory-Method/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Factory-Method/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Abstract-Factory/index.html'">
+                    <span class="category-badge badge-creational">سازنده</span>
+                    <div class="pattern-icon">🏗️</div>
+                    <h3 class="pattern-title">Abstract Factory</h3>
+                    <p class="pattern-description">ایجاد خانواده‌ای از اشیاء مرتبط بدون مشخص کردن کلاس‌های مشخص</p>
+                    <div class="pattern-links">
+                        <a href="./Abstract-Factory/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Abstract-Factory/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Builder/index.html'">
+                    <span class="category-badge badge-creational">سازنده</span>
+                    <div class="pattern-icon">👷</div>
+                    <h3 class="pattern-title">Builder</h3>
+                    <p class="pattern-description">ساخت گام‌به‌گام اشیاء پیچیده با امکان ایجاد نمایش‌های مختلف</p>
+                    <div class="pattern-links">
+                        <a href="./Builder/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Builder/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Prototype/index.html'">
+                    <span class="category-badge badge-creational">سازنده</span>
+                    <div class="pattern-icon">🧬</div>
+                    <h3 class="pattern-title">Prototype</h3>
+                    <p class="pattern-description">کپی‌برداری از اشیاء موجود بدون وابستگی به کلاس‌هایشان</p>
+                    <div class="pattern-links">
+                        <a href="./Prototype/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Prototype/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Singleton/index.html'">
+                    <span class="category-badge badge-creational">سازنده</span>
+                    <div class="pattern-icon">👑</div>
+                    <h3 class="pattern-title">Singleton</h3>
+                    <p class="pattern-description">اطمینان از وجود تنها یک نمونه از کلاس با دسترسی سراسری</p>
+                    <div class="pattern-links">
+                        <a href="./Singleton/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Singleton/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Structural Patterns -->
+        <section class="section">
+            <h2 class="section-title">
+                <span>2️⃣</span>
+                <span>الگوهای ساختاری (Structural Patterns)</span>
+            </h2>
+            <p class="section-subtitle">
+                الگوهایی که نحوه ترکیب اشیاء و کلاس‌ها برای ایجاد ساختارهای بزرگ‌تر و انعطاف‌پذیرتر را توضیح می‌دهند.
+            </p>
+            <div class="patterns-grid">
+                <div class="pattern-card" onclick="location.href='./Adapter/index.html'">
+                    <span class="category-badge badge-structural">ساختاری</span>
+                    <div class="pattern-icon">🔌</div>
+                    <h3 class="pattern-title">Adapter</h3>
+                    <p class="pattern-description">تبدیل رابط کلاس به رابط مورد انتظار کلاینت</p>
+                    <div class="pattern-links">
+                        <a href="./Adapter/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Adapter/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Bridge/index.html'">
+                    <span class="category-badge badge-structural">ساختاری</span>
+                    <div class="pattern-icon">🌉</div>
+                    <h3 class="pattern-title">Bridge</h3>
+                    <p class="pattern-description">جداسازی انتزاع از پیاده‌سازی برای تغییر مستقل</p>
+                    <div class="pattern-links">
+                        <a href="./Bridge/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Bridge/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Composite/index.html'">
+                    <span class="category-badge badge-structural">ساختاری</span>
+                    <div class="pattern-icon">🌳</div>
+                    <h3 class="pattern-title">Composite</h3>
+                    <p class="pattern-description">ترکیب اشیاء در ساختار درختی برای نمایش سلسله‌مراتب</p>
+                    <div class="pattern-links">
+                        <a href="./Composite/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Composite/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Decorator/index.html'">
+                    <span class="category-badge badge-structural">ساختاری</span>
+                    <div class="pattern-icon">🎁</div>
+                    <h3 class="pattern-title">Decorator</h3>
+                    <p class="pattern-description">افزودن مسئولیت‌های جدید به اشیاء به‌صورت پویا</p>
+                    <div class="pattern-links">
+                        <a href="./Decorator/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Decorator/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Facade/index.html'">
+                    <span class="category-badge badge-structural">ساختاری</span>
+                    <div class="pattern-icon">🏛️</div>
+                    <h3 class="pattern-title">Facade</h3>
+                    <p class="pattern-description">ارائه رابط ساده‌شده به مجموعه پیچیده‌ای از کلاس‌ها</p>
+                    <div class="pattern-links">
+                        <a href="./Facade/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Facade/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Flyweight/index.html'">
+                    <span class="category-badge badge-structural">ساختاری</span>
+                    <div class="pattern-icon">🪶</div>
+                    <h3 class="pattern-title">Flyweight</h3>
+                    <p class="pattern-description">کاهش مصرف حافظه با اشتراک‌گذاری داده‌های مشترک</p>
+                    <div class="pattern-links">
+                        <a href="./Flyweight/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Flyweight/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Proxy/index.html'">
+                    <span class="category-badge badge-structural">ساختاری</span>
+                    <div class="pattern-icon">🛡️</div>
+                    <h3 class="pattern-title">Proxy</h3>
+                    <p class="pattern-description">ارائه جایگزین یا نماینده برای کنترل دسترسی به شیء</p>
+                    <div class="pattern-links">
+                        <a href="./Proxy/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Proxy/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Behavioral Patterns -->
+        <section class="section">
+            <h2 class="section-title">
+                <span>3️⃣</span>
+                <span>الگوهای رفتاری (Behavioral Patterns)</span>
+            </h2>
+            <p class="section-subtitle">
+                الگوهایی که الگوریتم‌ها و تخصیص مسئولیت‌ها بین اشیاء را مشخص می‌کنند.
+            </p>
+            <div class="patterns-grid">
+                <div class="pattern-card" onclick="location.href='./Chain-of-Responsibility/index.html'">
+                    <span class="category-badge badge-behavioral">رفتاری</span>
+                    <div class="pattern-icon">🔗</div>
+                    <h3 class="pattern-title">Chain of Responsibility</h3>
+                    <p class="pattern-description">انتقال درخواست در زنجیره‌ای از دریافت‌کنندگان</p>
+                    <div class="pattern-links">
+                        <a href="./Chain-of-Responsibility/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Chain-of-Responsibility/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Command/index.html'">
+                    <span class="category-badge badge-behavioral">رفتاری</span>
+                    <div class="pattern-icon">🎮</div>
+                    <h3 class="pattern-title">Command</h3>
+                    <p class="pattern-description">تبدیل درخواست به شیء مستقل با تمام اطلاعات</p>
+                    <div class="pattern-links">
+                        <a href="./Command/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Command/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Iterator/index.html'">
+                    <span class="category-badge badge-behavioral">رفتاری</span>
+                    <div class="pattern-icon">🔄</div>
+                    <h3 class="pattern-title">Iterator</h3>
+                    <p class="pattern-description">دسترسی متوالی به عناصر بدون افشای ساختار داخلی</p>
+                    <div class="pattern-links">
+                        <a href="./Iterator/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Iterator/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Mediator/index.html'">
+                    <span class="category-badge badge-behavioral">رفتاری</span>
+                    <div class="pattern-icon">🤝</div>
+                    <h3 class="pattern-title">Mediator</h3>
+                    <p class="pattern-description">کاهش وابستگی‌های پیچیده با شیء میانجی</p>
+                    <div class="pattern-links">
+                        <a href="./Mediator/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Mediator/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Memento/index.html'">
+                    <span class="category-badge badge-behavioral">رفتاری</span>
+                    <div class="pattern-icon">📸</div>
+                    <h3 class="pattern-title">Memento</h3>
+                    <p class="pattern-description">ذخیره و بازیابی حالت قبلی شیء بدون افشای جزئیات</p>
+                    <div class="pattern-links">
+                        <a href="./Memento/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Memento/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Observer/index.html'">
+                    <span class="category-badge badge-behavioral">رفتاری</span>
+                    <div class="pattern-icon">👁️</div>
+                    <h3 class="pattern-title">Observer</h3>
+                    <p class="pattern-description">اطلاع‌رسانی خودکار تغییرات به اشیاء وابسته</p>
+                    <div class="pattern-links">
+                        <a href="./Observer/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Observer/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./State/index.html'">
+                    <span class="category-badge badge-behavioral">رفتاری</span>
+                    <div class="pattern-icon">🎭</div>
+                    <h3 class="pattern-title">State</h3>
+                    <p class="pattern-description">تغییر رفتار شیء با تغییر وضعیت داخلی</p>
+                    <div class="pattern-links">
+                        <a href="./State/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./State/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Strategy/index.html'">
+                    <span class="category-badge badge-behavioral">رفتاری</span>
+                    <div class="pattern-icon">🎯</div>
+                    <h3 class="pattern-title">Strategy</h3>
+                    <p class="pattern-description">تعریف خانواده الگوریتم‌ها با قابلیت تعویض</p>
+                    <div class="pattern-links">
+                        <a href="./Strategy/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Strategy/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Template-Method/index.html'">
+                    <span class="category-badge badge-behavioral">رفتاری</span>
+                    <div class="pattern-icon">📋</div>
+                    <h3 class="pattern-title">Template Method</h3>
+                    <p class="pattern-description">تعریف اسکلت الگوریتم با امکان بازنویسی مراحل</p>
+                    <div class="pattern-links">
+                        <a href="./Template-Method/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Template-Method/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+
+                <div class="pattern-card" onclick="location.href='./Visitor/index.html'">
+                    <span class="category-badge badge-behavioral">رفتاری</span>
+                    <div class="pattern-icon">👤</div>
+                    <h3 class="pattern-title">Visitor</h3>
+                    <p class="pattern-description">افزودن عملیات جدید بدون تغییر کلاس‌های عناصر</p>
+                    <div class="pattern-links">
+                        <a href="./Visitor/index.html" class="btn btn-primary">مشاهده 🌐</a>
+                        <a href="./Visitor/README.md" class="btn btn-secondary">README 📚</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>ساخته شده با ❤️ برای جامعه برنامه‌نویسان فارسی‌زبان</p>
+            <p>تمام 22 الگوی طراحی کلاسیک • توضیحات فارسی • مثال‌های C#</p>
+            <div class="footer-links">
+                <a href="https://github.com" target="_blank">GitHub</a>
+                <a href="https://refactoring.guru/design-patterns" target="_blank">Refactoring.Guru</a>
+                <a href="README.md">مستندات</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('theme-icon');
+            const currentTheme = html.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                html.removeAttribute('data-theme');
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '☀️';
+            }
+        });
+    </script>
+</body>
+</html>
