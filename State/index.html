@@ -5,56 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>State - الگوهای طراحی</title>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        :root {--primary:#ec4899;--bg:#fff;--surface:#f8fafc;--text:#1e293b;--text-secondary:#64748b;--border:#e2e8f0;}
-        [data-theme="dark"]{--bg:#0f172a;--surface:#1e293b;--text:#f1f5f9;--text-secondary:#cbd5e1;--border:#334155;}
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:'Vazirmatn',sans-serif;background:var(--bg);color:var(--text);line-height:1.8;transition:all .3s;}
-        .container{max-width:1000px;margin:0 auto;padding:20px;}
-        .theme-toggle{position:fixed;top:20px;left:20px;background:var(--surface);border:2px solid var(--border);border-radius:50%;width:50px;height:50px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.5rem;z-index:1000;box-shadow:0 4px 6px rgba(0,0,0,.1);transition:transform .3s;}
-        .theme-toggle:hover{transform:scale(1.1);}
-        .back-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:var(--surface);border:2px solid var(--border);border-radius:8px;color:var(--text);text-decoration:none;font-weight:500;transition:all .3s;margin-bottom:30px;}
-        .back-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary);transform:translateX(-5px);}
-        header{text-align:center;padding:40px 0;border-bottom:3px solid var(--primary);margin-bottom:40px;}
-        .icon{font-size:4rem;margin-bottom:20px;}
-        h1{font-size:2.5rem;color:var(--primary);margin-bottom:10px;}
-        .subtitle{color:var(--text-secondary);font-size:1.1rem;}
-        .badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:.9rem;font-weight:600;margin-top:15px;background:rgba(99,102,241,.1);color:var(--primary);}
-        #content section{background:var(--surface);border-radius:16px;padding:30px;margin-bottom:30px;border:2px solid var(--border);}
-        #content h2{color:var(--primary);font-size:1.8rem;margin-bottom:20px;}
-        #content h3{color:var(--text);font-size:1.4rem;margin:20px 0 15px;}
-        #content p{color:var(--text-secondary);margin-bottom:15px;}
-        #content ul,#content ol{margin:15px 0;padding-right:30px;}
-        #content li{margin:10px 0;color:var(--text-secondary);}
-        pre{background:#282c34!important;border-radius:12px;padding:20px;overflow-x:auto;margin:20px 0;}
-        pre code{font-family:'Consolas','Monaco',monospace;font-size:.9rem;}
-        .mermaid{background:#fff;padding:20px;border-radius:12px;margin:20px 0;text-align:center;}
-        footer{text-align:center;padding:40px 0;margin-top:60px;border-top:2px solid var(--border);color:var(--text-secondary);}
-        @media (max-width:768px){h1{font-size:2rem;}.icon{font-size:3rem;}}
+        /* استایل‌های اختصاصی برای رنگ اکسنت الگوی State */
+        :root {
+            --primary: #ec4899;
+        }
+        .badge {
+            background: rgba(236, 72, 153, 0.1);
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()"><span id="theme-icon">��</span></button>
+    <button class="theme-toggle" onclick="toggleTheme()"><span id="theme-icon">🌙</span></button>
     <div class="container">
         <a href="../index.html" class="back-btn"><span>🏠</span><span>بازگشت به صفحه اصلی</span></a>
         <header>
-            <div class="icon"># الگوی State (وضعیت / حالت)</div>
+            <div class="icon">🎭</div>
             <h1>State</h1>
-            <p class="subtitle">وضعیت / حالت</p>
+            <p class="subtitle">وضعیت</p>
             <span class="badge">رفتاری</span>
         </header>
         <main id="content"><p>در حال بارگذاری...</p></main>
         <footer><p>ساخته شده با ❤️ برای جامعه برنامه‌نویسان فارسی‌زبان</p></footer>
     </div>
+    <script src="../script.js"></script>
     <script>
-        mermaid.initialize({startOnLoad:false,theme:'default'});
-        function toggleTheme(){const a=document.documentElement,b=document.getElementById('theme-icon'),c='dark'===a.getAttribute('data-theme');c?(a.removeAttribute('data-theme'),b.textContent='🌙',localStorage.setItem('theme','light'),mermaid.initialize({startOnLoad:false,theme:'default'})):(a.setAttribute('data-theme','dark'),b.textContent='☀️',localStorage.setItem('theme','dark'),mermaid.initialize({startOnLoad:false,theme:'dark'})),loadContent()}'dark'===localStorage.getItem('theme')&&(document.documentElement.setAttribute('data-theme','dark'),document.getElementById('theme-icon').textContent='☀️',mermaid.initialize({startOnLoad:false,theme:'dark'}));
-        async function loadContent(){try{const a=await fetch('README.md'),b=await a.text();let c=b.replace(/^# .+\n\n/,'');marked.setOptions({highlight:function(a,b){return b&&hljs.getLanguage(b)?hljs.highlight(a,{language:b}).value:hljs.highlightAuto(a).value},breaks:!0,gfm:!0});let d=marked.parse(c);d=d.replace(/<h2/g,'</section><section><h2'),d='<section>'+d+'</section>',d=d.replace('<section></section>',''),document.getElementById('content').innerHTML=d;const e=document.querySelectorAll('.language-mermaid');e.forEach((a)=>{const b=a.textContent,c=document.createElement('div');c.className='mermaid',c.textContent=b,a.parentElement.replaceWith(c)}),await mermaid.run(),document.querySelectorAll('pre code').forEach((a)=>{hljs.highlightElement(a)})}catch(a){console.error('Error:',a),document.getElementById('content').innerHTML='<section><p>خطا در بارگذاری</p></section>'}}
+        // بارگذاری محتوا هنگام آماده شدن صفحه
         loadContent();
     </script>
 </body>

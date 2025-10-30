@@ -60,144 +60,208 @@
 ### معایب ❌
 - پیچیدگی کلی کد افزایش می‌یابد
 
-## 💻 مثال کد (Python)
+## 💻 مثال کد (C#)
 
-```python
-from abc import ABC, abstractmethod
+```csharp
+using System;
 
-# Target Interface
-class MediaPlayer(ABC):
-    @abstractmethod
-    def play(self, audio_type: str, filename: str):
-        pass
+// رابط Target - رابط مورد انتظار
+public interface IMediaPlayer
+{
+    void Play(string audioType, string filename);
+}
 
-# Adaptee 1 - کلاس موجود با رابط متفاوت
-class MP3Player:
-    def play_mp3(self, filename: str):
-        print(f"🎵 پخش فایل MP3: {filename}")
+// Adaptee 1 - کلاس موجود با رابط متفاوت
+public class MP3Player
+{
+    public void PlayMP3(string filename)
+    {
+        Console.WriteLine($"🎵 پخش فایل MP3: {filename}");
+    }
+}
 
-# Adaptee 2
-class MP4Player:
-    def play_mp4(self, filename: str):
-        print(f"🎬 پخش فایل MP4: {filename}")
+// Adaptee 2
+public class MP4Player
+{
+    public void PlayMP4(string filename)
+    {
+        Console.WriteLine($"🎬 پخش فایل MP4: {filename}");
+    }
+}
 
-# Adaptee 3
-class VLCPlayer:
-    def play_vlc(self, filename: str):
-        print(f"📀 پخش فایل VLC: {filename}")
+// Adaptee 3
+public class VLCPlayer
+{
+    public void PlayVLC(string filename)
+    {
+        Console.WriteLine($"📀 پخش فایل VLC: {filename}");
+    }
+}
 
-# Adapter
-class MediaAdapter(MediaPlayer):
-    def __init__(self, audio_type: str):
-        self.audio_type = audio_type
-        
-        if audio_type == "mp4":
-            self.player = MP4Player()
-        elif audio_type == "vlc":
-            self.player = VLCPlayer()
-    
-    def play(self, audio_type: str, filename: str):
-        if audio_type == "mp4":
-            self.player.play_mp4(filename)
-        elif audio_type == "vlc":
-            self.player.play_vlc(filename)
+// Adapter - تبدیل کننده
+public class MediaAdapter : IMediaPlayer
+{
+    private readonly MP4Player _mp4Player;
+    private readonly VLCPlayer _vlcPlayer;
 
-# Client
-class AudioPlayer(MediaPlayer):
-    def play(self, audio_type: str, filename: str):
-        # پخش داخلی mp3
-        if audio_type == "mp3":
-            mp3_player = MP3Player()
-            mp3_player.play_mp3(filename)
-        
-        # استفاده از آداپتور برای فرمت‌های دیگر
-        elif audio_type in ["mp4", "vlc"]:
-            adapter = MediaAdapter(audio_type)
-            adapter.play(audio_type, filename)
-        
-        else:
-            print(f"❌ فرمت {audio_type} پشتیبانی نمی‌شود")
+    public MediaAdapter(string audioType)
+    {
+        if (audioType.Equals("mp4", StringComparison.OrdinalIgnoreCase))
+        {
+            _mp4Player = new MP4Player();
+        }
+        else if (audioType.Equals("vlc", StringComparison.OrdinalIgnoreCase))
+        {
+            _vlcPlayer = new VLCPlayer();
+        }
+    }
 
-# استفاده
-if __name__ == "__main__":
-    print("🎧 الگوی Adapter - پخش‌کننده صوتی\n")
-    print("=" * 60)
-    
-    player = AudioPlayer()
-    
-    print("\n📀 پخش فایل‌های مختلف:")
-    print("-" * 60)
-    player.play("mp3", "آهنگ_محلی.mp3")
-    player.play("mp4", "ویدیو_موزیک.mp4")
-    player.play("vlc", "فیلم.vlc")
-    player.play("avi", "فیلم.avi")
+    public void Play(string audioType, string filename)
+    {
+        if (audioType.Equals("mp4", StringComparison.OrdinalIgnoreCase))
+        {
+            _mp4Player.PlayMP4(filename);
+        }
+        else if (audioType.Equals("vlc", StringComparison.OrdinalIgnoreCase))
+        {
+            _vlcPlayer.PlayVLC(filename);
+        }
+    }
+}
+
+// Client - پخش‌کننده صوتی
+public class AudioPlayer : IMediaPlayer
+{
+    public void Play(string audioType, string filename)
+    {
+        // پخش داخلی MP3
+        if (audioType.Equals("mp3", StringComparison.OrdinalIgnoreCase))
+        {
+            MP3Player mp3Player = new MP3Player();
+            mp3Player.PlayMP3(filename);
+        }
+        // استفاده از آداپتور برای فرمت‌های دیگر
+        else if (audioType.Equals("mp4", StringComparison.OrdinalIgnoreCase) || 
+                 audioType.Equals("vlc", StringComparison.OrdinalIgnoreCase))
+        {
+            MediaAdapter adapter = new MediaAdapter(audioType);
+            adapter.Play(audioType, filename);
+        }
+        else
+        {
+            Console.WriteLine($"❌ فرمت {audioType} پشتیبانی نمی‌شود");
+        }
+    }
+}
+
+// استفاده از الگو
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("🎧 الگوی Adapter - پخش‌کننده صوتی\n");
+        Console.WriteLine(new string('=', 60));
+
+        AudioPlayer player = new AudioPlayer();
+
+        Console.WriteLine("\n📀 پخش فایل‌های مختلف:");
+        Console.WriteLine(new string('-', 60));
+        player.Play("mp3", "آهنگ_محلی.mp3");
+        player.Play("mp4", "ویدیو_موزیک.mp4");
+        player.Play("vlc", "فیلم.vlc");
+        player.Play("avi", "فیلم.avi");
+    }
+}
+
+/* خروجی:
+🎧 الگوی Adapter - پخش‌کننده صوتی
+
+============================================================
+
+📀 پخش فایل‌های مختلف:
+------------------------------------------------------------
+🎵 پخش فایل MP3: آهنگ_محلی.mp3
+🎬 پخش فایل MP4: ویدیو_موزیک.mp4
+📀 پخش فایل VLC: فیلم.vlc
+❌ فرمت avi پشتیبانی نمی‌شود
+*/
 ```
 
-## 🎯 مثال کاربردی واقعی
+## 🎯 کاربردهای واقعی
 
-### مثال 1: تبدیل واحد دما
-```python
-class FahrenheitSensor:
-    """سنسور قدیمی که دما را به فارنهایت می‌دهد"""
-    def get_temperature(self) -> float:
-        return 98.6  # فارنهایت
+1. **سیستم‌های قدیمی (Legacy)**: یکپارچه‌سازی کد قدیمی با معماری جدید
+2. **کتابخانه‌های Third-party**: استفاده از کتابخانه‌هایی با رابط متفاوت
+3. **تبدیل داده**: تبدیل بین فرمت‌های مختلف (XML ↔ JSON)
+4. **Device Drivers**: تطبیق سخت‌افزارهای مختلف با رابط یکسان
+5. **پخش‌کننده‌های رسانه**: پشتیبانی از فرمت‌های مختلف
+6. **API Wrappers**: پوشش دادن API های مختلف با یک رابط یکسان
 
-class CelsiusInterface(ABC):
-    @abstractmethod
-    def get_celsius_temperature(self) -> float:
-        pass
+## 📊 نمودار کلاس
 
-class TemperatureAdapter(CelsiusInterface):
-    def __init__(self, sensor: FahrenheitSensor):
-        self.sensor = sensor
+```mermaid
+classDiagram
+    class IMediaPlayer {
+        <<interface>>
+        +Play(audioType, filename)
+    }
     
-    def get_celsius_temperature(self) -> float:
-        fahrenheit = self.sensor.get_temperature()
-        celsius = (fahrenheit - 32) * 5/9
-        return round(celsius, 1)
-
-# استفاده
-sensor = FahrenheitSensor()
-adapter = TemperatureAdapter(sensor)
-print(f"🌡️ دما: {adapter.get_celsius_temperature()}°C")
-```
-
-### مثال 2: سیستم پرداخت
-```python
-# سیستم پرداخت قدیمی
-class OldPaymentSystem:
-    def make_payment(self, amount):
-        print(f"💰 پرداخت {amount} ریال از طریق سیستم قدیمی")
-
-# رابط جدید
-class ModernPaymentProcessor(ABC):
-    @abstractmethod
-    def process_payment(self, amount, currency):
-        pass
-
-# آداپتور
-class PaymentAdapter(ModernPaymentProcessor):
-    def __init__(self, old_system: OldPaymentSystem):
-        self.old_system = old_system
+    class AudioPlayer {
+        +Play(audioType, filename)
+    }
     
-    def process_payment(self, amount, currency):
-        if currency == "USD":
-            amount *= 42000  # تبدیل به ریال
-        self.old_system.make_payment(amount)
-
-# استفاده
-old_system = OldPaymentSystem()
-adapter = PaymentAdapter(old_system)
-adapter.process_payment(100, "USD")
+    class MediaAdapter {
+        -MP4Player mp4Player
+        -VLCPlayer vlcPlayer
+        +Play(audioType, filename)
+    }
+    
+    class MP3Player {
+        +PlayMP3(filename)
+    }
+    
+    class MP4Player {
+        +PlayMP4(filename)
+    }
+    
+    class VLCPlayer {
+        +PlayVLC(filename)
+    }
+    
+    IMediaPlayer <|.. AudioPlayer
+    IMediaPlayer <|.. MediaAdapter
+    MediaAdapter --> MP4Player
+    MediaAdapter --> VLCPlayer
+    AudioPlayer --> MP3Player
+    AudioPlayer --> MediaAdapter
 ```
 
 ## 🔍 چه زمانی استفاده کنیم؟
 
-1. **زمانی که می‌خواهید از کلاس موجود استفاده کنید اما رابط آن با بقیه کد سازگار نیست**
-2. **زمانی که می‌خواهید چندین کلاس زیر با عملکرد مشابه را استفاده مجدد کنید**
-3. **برای یکپارچه‌سازی کتابخانه‌های شخص ثالث**
-4. **برای کار با سیستم‌های قدیمی (Legacy Systems)**
+1. **رابط ناسازگار**: کلاس موجود رابط مناسبی ندارد ولی نمی‌توانیم آن را تغییر دهیم
+2. **استفاده مجدد**: چندین کلاس زیر با رابط‌های مختلف دارید که می‌خواهید یکسان کنید
+3. **کتابخانه‌های Third-party**: یکپارچه‌سازی کتابخانه‌های خارجی
+4. **Legacy Systems**: کار با سیستم‌های قدیمی بدون تغییر کد آنها
+5. **پلاگین‌ها**: ایجاد سیستم پلاگین با رابط یکسان
+
+## ✅ مزایا
+
+- **استفاده مجدد**: امکان استفاده از کلاس‌های موجود
+- **اصل تک مسئولیتی**: جداسازی تبدیل رابط از منطق تجاری
+- **اصل Open/Closed**: اضافه کردن Adapter های جدید بدون تغییر کد موجود
+- **انعطاف‌پذیری**: تطبیق کلاس‌های مختلف با یک رابط
+
+## ❌ معایب
+
+- **پیچیدگی**: اضافه شدن کلاس‌ها و رابط‌های جدید
+- **گاهی بهتر است**: کد مبدأ را مستقیماً تغییر دهید (اگر امکان دارد)
+
+## 🔑 نکات کلیدی
+
+- Adapter دو نوع دارد: **Object Adapter** (استفاده از Composition) و **Class Adapter** (استفاده از Inheritance)
+- در C# معمولاً از Object Adapter استفاده می‌شود
+- Adapter فقط رابط را تغییر می‌دهد، نه رفتار
+- می‌تواند دو طرفه باشد (Two-way Adapter)
 
 ---
 
-> **یادآوری**: Adapter مانند یک مترجم عمل می‌کند و به اشیاء مختلف اجازه می‌دهد با هم صحبت کنند! 🔌
+> **یادآوری**: Adapter مانند یک مترجم عمل می‌کند و به اشیاء با رابط‌های مختلف اجازه می‌دهد با هم ارتباط برقرار کنند! 🔌
