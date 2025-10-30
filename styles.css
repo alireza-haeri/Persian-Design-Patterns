@@ -161,25 +161,35 @@ header p {
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 20px 25px;
-    border-radius: 12px;
+    padding: 25px 30px;
+    border-radius: 16px;
     background: var(--surface-color);
     border: 3px solid;
+    box-shadow: var(--shadow-lg);
+    transition: all 0.3s;
+}
+
+.category-header:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.15);
 }
 
 .category-header.level-beginner {
     border-color: #10b981;
     color: #10b981;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
 }
 
 .category-header.level-intermediate {
     border-color: #f59e0b;
     color: #f59e0b;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
 }
 
 .category-header.level-advanced {
     border-color: #ef4444;
     color: #ef4444;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
 }
 
 .category-icon {
@@ -218,16 +228,22 @@ header p {
     left: 15px;
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
-    width: 45px;
-    height: 45px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: 700;
-    box-shadow: var(--shadow);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
     z-index: 1;
+    transition: all 0.3s;
+}
+
+.pattern-card:hover .pattern-number {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.6);
 }
 
 .pattern-card::before {
@@ -554,22 +570,26 @@ footer p {
 
 .level-card {
     background: var(--bg-color);
-    padding: 25px;
-    border-radius: 12px;
+    padding: 30px;
+    border-radius: 16px;
     border: 3px solid;
     transition: all 0.3s;
+    box-shadow: var(--shadow);
 }
 
 .level-beginner {
     border-color: #10b981;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(16, 185, 129, 0.02));
 }
 
 .level-intermediate {
     border-color: #f59e0b;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(245, 158, 11, 0.02));
 }
 
 .level-advanced {
     border-color: #ef4444;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(239, 68, 68, 0.02));
 }
 
 .level-card:hover {
@@ -609,14 +629,22 @@ footer p {
 }
 
 .learning-tip {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
-    padding: 20px;
-    border-radius: 12px;
-    border: 2px solid var(--primary-color);
-    margin-top: 30px;
-    font-size: 1.05rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1));
+    padding: 25px 30px;
+    border-radius: 16px;
+    border: 3px solid var(--primary-color);
+    border-left-width: 8px;
+    margin-top: 40px;
+    font-size: 1.1rem;
     color: var(--text-primary);
     text-align: center;
+    box-shadow: var(--shadow-lg);
+    transition: all 0.3s;
+}
+
+.learning-tip:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 25px 30px -5px rgba(99, 102, 241, 0.3);
 }
 
 /* Navigation Buttons for Pattern Pages */
