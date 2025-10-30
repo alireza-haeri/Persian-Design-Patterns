@@ -127,9 +127,34 @@ function createNavigationButtons() {
     }
 }
 
-// اجرای تابع بعد از بارگذاری DOM
+// اجرای تابع بعد از بارگذاری محتوا
+// ابتدا منتظر می‌مانیم تا محتوا بارگذاری شود
+function initNavigation() {
+    const contentDiv = document.getElementById('content');
+    if (!contentDiv) {
+        // اگر المان content وجود نداشت، بعداً تلاش کن
+        setTimeout(initNavigation, 100);
+        return;
+    }
+    
+    // بعد از بارگذاری محتوا، ناوبری را اضافه کن
+    const checkContentLoaded = () => {
+        const contentDiv = document.getElementById('content');
+        if (contentDiv && (contentDiv.querySelector('section') || contentDiv.textContent.includes('خطا'))) {
+            // محتوا بارگذاری شده یا خطا رخ داده
+            createNavigationButtons();
+        } else {
+            // هنوز بارگذاری نشده، صبر کن
+            setTimeout(checkContentLoaded, 200);
+        }
+    };
+    
+    checkContentLoaded();
+}
+
+// اجرای تابع
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', createNavigationButtons);
+    document.addEventListener('DOMContentLoaded', initNavigation);
 } else {
-    createNavigationButtons();
+    initNavigation();
 }
