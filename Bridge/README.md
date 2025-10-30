@@ -55,196 +55,333 @@ Bridge سعی می‌کند این مشکل را با تغییر از وراثت
 ### معایب ❌
 - ممکن است کد را برای کلاس‌های بسیار cohesive پیچیده‌تر کند
 
-## 💻 مثال کد (Python)
+## 💻 مثال کد (C#)
 
-```python
-from abc import ABC, abstractmethod
+```csharp
+using System;
 
-# Implementation Interface
-class Device(ABC):
-    @abstractmethod
-    def is_enabled(self) -> bool:
-        pass
-    
-    @abstractmethod
-    def enable(self):
-        pass
-    
-    @abstractmethod
-    def disable(self):
-        pass
-    
-    @abstractmethod
-    def get_volume(self) -> int:
-        pass
-    
-    @abstractmethod
-    def set_volume(self, percent: int):
-        pass
-    
-    @abstractmethod
-    def get_channel(self) -> int:
-        pass
-    
-    @abstractmethod
-    def set_channel(self, channel: int):
-        pass
+namespace BridgePattern
+{
+    // Implementation Interface
+    // رابط پیاده‌سازی - تعریف عملیات پایه برای تمام دستگاه‌ها
+    public interface IDevice
+    {
+        bool IsEnabled();
+        void Enable();
+        void Disable();
+        int GetVolume();
+        void SetVolume(int percent);
+        int GetChannel();
+        void SetChannel(int channel);
+    }
 
-# Concrete Implementations
-class TV(Device):
-    def __init__(self):
-        self._on = False
-        self._volume = 30
-        self._channel = 1
-    
-    def is_enabled(self) -> bool:
-        return self._on
-    
-    def enable(self):
-        self._on = True
-        print("📺 تلویزیون روشن شد")
-    
-    def disable(self):
-        self._on = False
-        print("📺 تلویزیون خاموش شد")
-    
-    def get_volume(self) -> int:
-        return self._volume
-    
-    def set_volume(self, percent: int):
-        self._volume = max(0, min(percent, 100))
-        print(f"🔊 صدای تلویزیون: {self._volume}%")
-    
-    def get_channel(self) -> int:
-        return self._channel
-    
-    def set_channel(self, channel: int):
-        self._channel = channel
-        print(f"📡 کانال تلویزیون: {self._channel}")
+    // Concrete Implementation - تلویزیون
+    // پیاده‌سازی مشخص برای دستگاه تلویزیون
+    public class TV : IDevice
+    {
+        private bool _on;
+        private int _volume;
+        private int _channel;
 
-class Radio(Device):
-    def __init__(self):
-        self._on = False
-        self._volume = 30
-        self._channel = 881  # فرکانس رادیو
-    
-    def is_enabled(self) -> bool:
-        return self._on
-    
-    def enable(self):
-        self._on = True
-        print("📻 رادیو روشن شد")
-    
-    def disable(self):
-        self._on = False
-        print("📻 رادیو خاموش شد")
-    
-    def get_volume(self) -> int:
-        return self._volume
-    
-    def set_volume(self, percent: int):
-        self._volume = max(0, min(percent, 100))
-        print(f"🔊 صدای رادیو: {self._volume}%")
-    
-    def get_channel(self) -> int:
-        return self._channel
-    
-    def set_channel(self, channel: int):
-        self._channel = channel
-        print(f"📻 فرکانس رادیو: {self._channel} AM")
+        public TV()
+        {
+            _on = false;
+            _volume = 30;
+            _channel = 1;
+        }
 
-# Abstraction
-class RemoteControl:
-    def __init__(self, device: Device):
-        self.device = device
-    
-    def toggle_power(self):
-        if self.device.is_enabled():
-            self.device.disable()
-        else:
-            self.device.enable()
-    
-    def volume_down(self):
-        current = self.device.get_volume()
-        self.device.set_volume(current - 10)
-    
-    def volume_up(self):
-        current = self.device.get_volume()
-        self.device.set_volume(current + 10)
-    
-    def channel_down(self):
-        current = self.device.get_channel()
-        self.device.set_channel(current - 1)
-    
-    def channel_up(self):
-        current = self.device.get_channel()
-        self.device.set_channel(current + 1)
+        public bool IsEnabled()
+        {
+            return _on;
+        }
 
-# Refined Abstraction
-class AdvancedRemoteControl(RemoteControl):
-    def mute(self):
-        print("🔇 سکوت...")
-        self.device.set_volume(0)
+        public void Enable()
+        {
+            _on = true;
+            Console.WriteLine("📺 تلویزیون روشن شد");
+        }
 
-# استفاده
-if __name__ == "__main__":
-    print("🎮 الگوی Bridge - کنترل از راه دور\n")
-    print("=" * 60)
-    
-    print("\n📺 کنترل تلویزیون:")
-    print("-" * 60)
-    tv = TV()
-    remote = RemoteControl(tv)
-    remote.toggle_power()
-    remote.volume_up()
-    remote.channel_up()
-    remote.toggle_power()
-    
-    print("\n\n📻 کنترل رادیو:")
-    print("-" * 60)
-    radio = Radio()
-    remote = RemoteControl(radio)
-    remote.toggle_power()
-    remote.volume_up()
-    remote.channel_up()
-    
-    print("\n\n🎛️ کنترل پیشرفته تلویزیون:")
-    print("-" * 60)
-    tv2 = TV()
-    advanced_remote = AdvancedRemoteControl(tv2)
-    advanced_remote.toggle_power()
-    advanced_remote.volume_up()
-    advanced_remote.mute()
+        public void Disable()
+        {
+            _on = false;
+            Console.WriteLine("📺 تلویزیون خاموش شد");
+        }
+
+        public int GetVolume()
+        {
+            return _volume;
+        }
+
+        public void SetVolume(int percent)
+        {
+            _volume = Math.Max(0, Math.Min(percent, 100));
+            Console.WriteLine($"🔊 صدای تلویزیون: {_volume}%");
+        }
+
+        public int GetChannel()
+        {
+            return _channel;
+        }
+
+        public void SetChannel(int channel)
+        {
+            _channel = channel;
+            Console.WriteLine($"📡 کانال تلویزیون: {_channel}");
+        }
+    }
+
+    // Concrete Implementation - رادیو
+    // پیاده‌سازی مشخص برای دستگاه رادیو
+    public class Radio : IDevice
+    {
+        private bool _on;
+        private int _volume;
+        private int _channel;
+
+        public Radio()
+        {
+            _on = false;
+            _volume = 30;
+            _channel = 881; // فرکانس رادیو
+        }
+
+        public bool IsEnabled()
+        {
+            return _on;
+        }
+
+        public void Enable()
+        {
+            _on = true;
+            Console.WriteLine("📻 رادیو روشن شد");
+        }
+
+        public void Disable()
+        {
+            _on = false;
+            Console.WriteLine("📻 رادیو خاموش شد");
+        }
+
+        public int GetVolume()
+        {
+            return _volume;
+        }
+
+        public void SetVolume(int percent)
+        {
+            _volume = Math.Max(0, Math.Min(percent, 100));
+            Console.WriteLine($"🔊 صدای رادیو: {_volume}%");
+        }
+
+        public int GetChannel()
+        {
+            return _channel;
+        }
+
+        public void SetChannel(int channel)
+        {
+            _channel = channel;
+            Console.WriteLine($"📻 فرکانس رادیو: {_channel} AM");
+        }
+    }
+
+    // Abstraction - کنترل از راه دور
+    // انتزاع اصلی که با دستگاه‌ها از طریق رابط کار می‌کند
+    public class RemoteControl
+    {
+        protected IDevice device;
+
+        public RemoteControl(IDevice device)
+        {
+            this.device = device;
+        }
+
+        public void TogglePower()
+        {
+            if (device.IsEnabled())
+            {
+                device.Disable();
+            }
+            else
+            {
+                device.Enable();
+            }
+        }
+
+        public void VolumeDown()
+        {
+            int current = device.GetVolume();
+            device.SetVolume(current - 10);
+        }
+
+        public void VolumeUp()
+        {
+            int current = device.GetVolume();
+            device.SetVolume(current + 10);
+        }
+
+        public void ChannelDown()
+        {
+            int current = device.GetChannel();
+            device.SetChannel(current - 1);
+        }
+
+        public void ChannelUp()
+        {
+            int current = device.GetChannel();
+            device.SetChannel(current + 1);
+        }
+    }
+
+    // Refined Abstraction - کنترل پیشرفته
+    // انتزاع تصفیه‌شده با قابلیت‌های اضافی
+    public class AdvancedRemoteControl : RemoteControl
+    {
+        public AdvancedRemoteControl(IDevice device) : base(device)
+        {
+        }
+
+        public void Mute()
+        {
+            Console.WriteLine("🔇 سکوت...");
+            device.SetVolume(0);
+        }
+    }
+
+    // Client Code
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // تنظیم کنسول برای نمایش درست فارسی
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            Console.WriteLine("🎮 الگوی Bridge - کنترل از راه دور\n");
+            Console.WriteLine(new string('=', 60));
+
+            // استفاده از کنترل معمولی با تلویزیون
+            Console.WriteLine("\n📺 کنترل تلویزیون:");
+            Console.WriteLine(new string('-', 60));
+            TV tv = new TV();
+            RemoteControl remote = new RemoteControl(tv);
+            remote.TogglePower();
+            remote.VolumeUp();
+            remote.ChannelUp();
+            remote.TogglePower();
+
+            // استفاده از کنترل معمولی با رادیو
+            Console.WriteLine("\n\n📻 کنترل رادیو:");
+            Console.WriteLine(new string('-', 60));
+            Radio radio = new Radio();
+            remote = new RemoteControl(radio);
+            remote.TogglePower();
+            remote.VolumeUp();
+            remote.ChannelUp();
+
+            // استفاده از کنترل پیشرفته با تلویزیون
+            Console.WriteLine("\n\n🎛️ کنترل پیشرفته تلویزیون:");
+            Console.WriteLine(new string('-', 60));
+            TV tv2 = new TV();
+            AdvancedRemoteControl advancedRemote = new AdvancedRemoteControl(tv2);
+            advancedRemote.TogglePower();
+            advancedRemote.VolumeUp();
+            advancedRemote.Mute();
+
+            Console.WriteLine("\n\n✅ اجرای موفقیت‌آمیز الگوی Bridge!");
+        }
+    }
+}
+```
+
+### 📤 خروجی برنامه:
+```
+🎮 الگوی Bridge - کنترل از راه دور
+
+============================================================
+
+📺 کنترل تلویزیون:
+------------------------------------------------------------
+📺 تلویزیون روشن شد
+🔊 صدای تلویزیون: 40%
+📡 کانال تلویزیون: 2
+📺 تلویزیون خاموش شد
+
+
+📻 کنترل رادیو:
+------------------------------------------------------------
+📻 رادیو روشن شد
+🔊 صدای رادیو: 40%
+📻 فرکانس رادیو: 882 AM
+
+
+🎛️ کنترل پیشرفته تلویزیون:
+------------------------------------------------------------
+📺 تلویزیون روشن شد
+🔊 صدای تلویزیون: 40%
+🔇 سکوت...
+🔊 صدای تلویزیون: 0%
+
+
+✅ اجرای موفقیت‌آمیز الگوی Bridge!
 ```
 
 ## 🎯 مثال کاربردی واقعی
 
 ### مثال 1: سیستم ارسال پیام
-```python
-class MessageSender(ABC):
-    @abstractmethod
-    def send(self, message: str):
-        pass
+```csharp
+// Implementation Interface - رابط ارسال کننده پیام
+public interface IMessageSender
+{
+    void Send(string message);
+}
 
-class EmailSender(MessageSender):
-    def send(self, message: str):
-        print(f"📧 ارسال ایمیل: {message}")
+// Concrete Implementation - ارسال ایمیل
+public class EmailSender : IMessageSender
+{
+    public void Send(string message)
+    {
+        Console.WriteLine($"📧 ارسال ایمیل: {message}");
+    }
+}
 
-class SMSSender(MessageSender):
-    def send(self, message: str):
-        print(f"📱 ارسال پیامک: {message}")
+// Concrete Implementation - ارسال پیامک
+public class SMSSender : IMessageSender
+{
+    public void Send(string message)
+    {
+        Console.WriteLine($"📱 ارسال پیامک: {message}");
+    }
+}
 
-class Message:
-    def __init__(self, sender: MessageSender):
-        self.sender = sender
-    
-    def send(self, text: str):
-        self.sender.send(text)
+// Abstraction - پیام
+public class Message
+{
+    protected IMessageSender sender;
 
-class UrgentMessage(Message):
-    def send(self, text: str):
-        text = f"⚠️ فوری: {text}"
-        self.sender.send(text)
+    public Message(IMessageSender sender)
+    {
+        this.sender = sender;
+    }
+
+    public virtual void Send(string text)
+    {
+        sender.Send(text);
+    }
+}
+
+// Refined Abstraction - پیام فوری
+public class UrgentMessage : Message
+{
+    public UrgentMessage(IMessageSender sender) : base(sender)
+    {
+    }
+
+    public override void Send(string text)
+    {
+        text = $"⚠️ فوری: {text}";
+        sender.Send(text);
+    }
+}
 ```
 
 ## 🔍 چه زمانی استفاده کنیم؟
