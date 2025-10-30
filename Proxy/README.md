@@ -72,188 +72,378 @@
 - کد ممکن است پیچیده‌تر شود
 - پاسخ سرویس ممکن است با تأخیر همراه باشد
 
-## 💻 مثال کد (Python)
+## 💻 مثال کد (C#)
 
-```python
-from abc import ABC, abstractmethod
-import time
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
-# Service Interface
-class Image(ABC):
-    @abstractmethod
-    def display(self):
-        pass
+// رابط سرویس - تعریف عملیات مشترک بین سرویس واقعی و پروکسی
+public interface IImage
+{
+    void Display();
+}
 
-# Real Service
-class RealImage(Image):
-    def __init__(self, filename: str):
-        self.filename = filename
-        self._load_from_disk()
-    
-    def _load_from_disk(self):
-        print(f"💿 بارگذاری تصویر از دیسک: {self.filename}")
-        time.sleep(2)  # شبیه‌سازی بارگذاری
-    
-    def display(self):
-        print(f"🖼️ نمایش تصویر: {self.filename}")
+// سرویس واقعی - کلاسی که عملیات واقعی را انجام می‌دهد
+public class RealImage : IImage
+{
+    private string _filename;
 
-# Virtual Proxy
-class ImageProxy(Image):
-    def __init__(self, filename: str):
-        self.filename = filename
-        self._real_image = None
-    
-    def display(self):
-        if self._real_image is None:
-            print("⏳ تصویر هنوز بارگذاری نشده، در حال بارگذاری...")
-            self._real_image = RealImage(self.filename)
-        self._real_image.display()
+    public RealImage(string filename)
+    {
+        _filename = filename;
+        LoadFromDisk();
+    }
 
-# Protection Proxy
-class ProtectedImageProxy(Image):
-    def __init__(self, filename: str, user_role: str):
-        self.filename = filename
-        self.user_role = user_role
-        self._real_image = None
-    
-    def display(self):
-        if self.user_role != "admin":
-            print("🚫 دسترسی رد شد! فقط ادمین می‌تواند این تصویر را ببیند.")
-            return
-        
-        if self._real_image is None:
-            self._real_image = RealImage(self.filename)
-        self._real_image.display()
+    // متد خصوصی برای بارگذاری تصویر از دیسک
+    private void LoadFromDisk()
+    {
+        Console.WriteLine($"💿 بارگذاری تصویر از دیسک: {_filename}");
+        Thread.Sleep(2000); // شبیه‌سازی بارگذاری
+    }
 
-# Caching Proxy
-class CachingImageProxy(Image):
-    _cache = {}
-    
-    def __init__(self, filename: str):
-        self.filename = filename
-    
-    def display(self):
-        if self.filename in self._cache:
-            print(f"⚡ نمایش تصویر از کش: {self.filename}")
-        else:
-            print(f"📥 بارگذاری و کش کردن تصویر: {self.filename}")
-            self._cache[self.filename] = RealImage(self.filename)
-        
-        self._cache[self.filename].display()
+    public void Display()
+    {
+        Console.WriteLine($"🖼️ نمایش تصویر: {_filename}");
+    }
+}
 
-# استفاده
-if __name__ == "__main__":
-    print("🎭 الگوی Proxy\n")
-    print("=" * 60)
-    
-    # Virtual Proxy
-    print("\n1️⃣ Virtual Proxy (Lazy Loading):")
-    print("-" * 60)
-    print("ایجاد proxy...")
-    image1 = ImageProxy("photo1.jpg")
-    print("Proxy ایجاد شد، اما تصویر واقعی هنوز بارگذاری نشده\n")
-    
-    print("اولین نمایش:")
-    image1.display()
-    
-    print("\nدومین نمایش:")
-    image1.display()
-    
-    # Protection Proxy
-    print("\n\n2️⃣ Protection Proxy (Access Control):")
-    print("-" * 60)
-    
-    print("کاربر عادی:")
-    image2 = ProtectedImageProxy("secret.jpg", "user")
-    image2.display()
-    
-    print("\nکاربر ادمین:")
-    image3 = ProtectedImageProxy("secret.jpg", "admin")
-    image3.display()
-    
-    # Caching Proxy
-    print("\n\n3️⃣ Caching Proxy:")
-    print("-" * 60)
-    
-    print("اولین درخواست:")
-    image4 = CachingImageProxy("cached_photo.jpg")
-    image4.display()
-    
-    print("\nدومین درخواست (از کش):")
-    image5 = CachingImageProxy("cached_photo.jpg")
-    image5.display()
+// Virtual Proxy - پروکسی مجازی برای Lazy Loading
+public class ImageProxy : IImage
+{
+    private string _filename;
+    private RealImage _realImage;
+
+    public ImageProxy(string filename)
+    {
+        _filename = filename;
+        _realImage = null;
+    }
+
+    public void Display()
+    {
+        // ایجاد شیء واقعی فقط در صورت نیاز (Lazy Initialization)
+        if (_realImage == null)
+        {
+            Console.WriteLine("⏳ تصویر هنوز بارگذاری نشده، در حال بارگذاری...");
+            _realImage = new RealImage(_filename);
+        }
+        _realImage.Display();
+    }
+}
+
+// Protection Proxy - پروکسی محافظ برای کنترل دسترسی
+public class ProtectedImageProxy : IImage
+{
+    private string _filename;
+    private string _userRole;
+    private RealImage _realImage;
+
+    public ProtectedImageProxy(string filename, string userRole)
+    {
+        _filename = filename;
+        _userRole = userRole;
+        _realImage = null;
+    }
+
+    public void Display()
+    {
+        // بررسی دسترسی کاربر
+        if (_userRole != "admin")
+        {
+            Console.WriteLine("🚫 دسترسی رد شد! فقط ادمین می‌تواند این تصویر را ببیند.");
+            return;
+        }
+
+        // ایجاد شیء واقعی در صورت داشتن دسترسی
+        if (_realImage == null)
+        {
+            _realImage = new RealImage(_filename);
+        }
+        _realImage.Display();
+    }
+}
+
+// Caching Proxy - پروکسی کش‌دار برای ذخیره نتایج
+public class CachingImageProxy : IImage
+{
+    private string _filename;
+    // کش استاتیک برای اشتراک بین تمام نمونه‌ها
+    private static Dictionary<string, RealImage> _cache = new Dictionary<string, RealImage>();
+
+    public CachingImageProxy(string filename)
+    {
+        _filename = filename;
+    }
+
+    public void Display()
+    {
+        // بررسی وجود تصویر در کش
+        if (_cache.ContainsKey(_filename))
+        {
+            Console.WriteLine($"⚡ نمایش تصویر از کش: {_filename}");
+        }
+        else
+        {
+            Console.WriteLine($"📥 بارگذاری و کش کردن تصویر: {_filename}");
+            _cache[_filename] = new RealImage(_filename);
+        }
+
+        _cache[_filename].Display();
+    }
+}
+
+// کلاس اصلی برای نمایش مثال‌های استفاده
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        Console.WriteLine("🎭 الگوی Proxy\n");
+        Console.WriteLine(new string('=', 60));
+
+        // Virtual Proxy - بارگذاری تنبل
+        Console.WriteLine("\n1️⃣ Virtual Proxy (Lazy Loading):");
+        Console.WriteLine(new string('-', 60));
+        Console.WriteLine("ایجاد proxy...");
+        IImage image1 = new ImageProxy("photo1.jpg");
+        Console.WriteLine("Proxy ایجاد شد، اما تصویر واقعی هنوز بارگذاری نشده\n");
+
+        Console.WriteLine("اولین نمایش:");
+        image1.Display();
+
+        Console.WriteLine("\nدومین نمایش:");
+        image1.Display();
+
+        // Protection Proxy - کنترل دسترسی
+        Console.WriteLine("\n\n2️⃣ Protection Proxy (Access Control):");
+        Console.WriteLine(new string('-', 60));
+
+        Console.WriteLine("کاربر عادی:");
+        IImage image2 = new ProtectedImageProxy("secret.jpg", "user");
+        image2.Display();
+
+        Console.WriteLine("\nکاربر ادمین:");
+        IImage image3 = new ProtectedImageProxy("secret.jpg", "admin");
+        image3.Display();
+
+        // Caching Proxy - کش کردن نتایج
+        Console.WriteLine("\n\n3️⃣ Caching Proxy:");
+        Console.WriteLine(new string('-', 60));
+
+        Console.WriteLine("اولین درخواست:");
+        IImage image4 = new CachingImageProxy("cached_photo.jpg");
+        image4.Display();
+
+        Console.WriteLine("\nدومین درخواست (از کش):");
+        IImage image5 = new CachingImageProxy("cached_photo.jpg");
+        image5.Display();
+    }
+}
+```
+
+### 📤 خروجی برنامه:
+```
+🎭 الگوی Proxy
+
+============================================================
+
+1️⃣ Virtual Proxy (Lazy Loading):
+------------------------------------------------------------
+ایجاد proxy...
+Proxy ایجاد شد، اما تصویر واقعی هنوز بارگذاری نشده
+
+اولین نمایش:
+⏳ تصویر هنوز بارگذاری نشده، در حال بارگذاری...
+💿 بارگذاری تصویر از دیسک: photo1.jpg
+🖼️ نمایش تصویر: photo1.jpg
+
+دومین نمایش:
+🖼️ نمایش تصویر: photo1.jpg
+
+
+2️⃣ Protection Proxy (Access Control):
+------------------------------------------------------------
+کاربر عادی:
+🚫 دسترسی رد شد! فقط ادمین می‌تواند این تصویر را ببیند.
+
+کاربر ادمین:
+💿 بارگذاری تصویر از دیسک: secret.jpg
+🖼️ نمایش تصویر: secret.jpg
+
+
+3️⃣ Caching Proxy:
+------------------------------------------------------------
+اولین درخواست:
+📥 بارگذاری و کش کردن تصویر: cached_photo.jpg
+💿 بارگذاری تصویر از دیسک: cached_photo.jpg
+🖼️ نمایش تصویر: cached_photo.jpg
+
+دومین درخواست (از کش):
+⚡ نمایش تصویر از کش: cached_photo.jpg
+🖼️ نمایش تصویر: cached_photo.jpg
 ```
 
 ## 🎯 مثال کاربردی واقعی
 
 ### مثال 1: Proxy برای API
-```python
-class DataService(ABC):
-    @abstractmethod
-    def get_data(self, user_id: int):
-        pass
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
-class RealDataService(DataService):
-    def get_data(self, user_id: int):
-        print(f"🌐 درخواست API برای کاربر {user_id}")
-        time.sleep(1)  # شبیه‌سازی تأخیر شبکه
-        return {"id": user_id, "name": f"کاربر {user_id}"}
+// رابط سرویس داده
+public interface IDataService
+{
+    Dictionary<string, object> GetData(int userId);
+}
 
-class CachedDataServiceProxy(DataService):
-    def __init__(self):
-        self._service = RealDataService()
-        self._cache = {}
-    
-    def get_data(self, user_id: int):
-        if user_id in self._cache:
-            print(f"⚡ بازگشت از کش برای کاربر {user_id}")
-            return self._cache[user_id]
+// سرویس واقعی که با API ارتباط برقرار می‌کند
+public class RealDataService : IDataService
+{
+    public Dictionary<string, object> GetData(int userId)
+    {
+        Console.WriteLine($"🌐 درخواست API برای کاربر {userId}");
+        Thread.Sleep(1000); // شبیه‌سازی تأخیر شبکه
         
-        data = self._service.get_data(user_id)
-        self._cache[user_id] = data
-        return data
+        return new Dictionary<string, object>
+        {
+            { "id", userId },
+            { "name", $"کاربر {userId}" }
+        };
+    }
+}
 
-# استفاده
-service = CachedDataServiceProxy()
-print(service.get_data(1))  # درخواست API
-print(service.get_data(1))  # از کش
+// پروکسی کش‌دار برای سرویس داده
+public class CachedDataServiceProxy : IDataService
+{
+    private RealDataService _service;
+    private Dictionary<int, Dictionary<string, object>> _cache;
+
+    public CachedDataServiceProxy()
+    {
+        _service = new RealDataService();
+        _cache = new Dictionary<int, Dictionary<string, object>>();
+    }
+
+    public Dictionary<string, object> GetData(int userId)
+    {
+        // بررسی وجود داده در کش
+        if (_cache.ContainsKey(userId))
+        {
+            Console.WriteLine($"⚡ بازگشت از کش برای کاربر {userId}");
+            return _cache[userId];
+        }
+
+        // دریافت داده از سرویس واقعی و ذخیره در کش
+        var data = _service.GetData(userId);
+        _cache[userId] = data;
+        return data;
+    }
+}
+
+// نمونه استفاده
+public class APIProxyExample
+{
+    public static void Example()
+    {
+        IDataService service = new CachedDataServiceProxy();
+        
+        Console.WriteLine("درخواست اول:");
+        var data1 = service.GetData(1);
+        Console.WriteLine($"دریافت شد: ID={data1["id"]}, Name={data1["name"]}\n");
+        
+        Console.WriteLine("درخواست دوم (از کش):");
+        var data2 = service.GetData(1);
+        Console.WriteLine($"دریافت شد: ID={data2["id"]}, Name={data2["name"]}");
+    }
+}
 ```
 
 ### مثال 2: Database Proxy
-```python
-class Database(ABC):
-    @abstractmethod
-    def query(self, sql: str):
-        pass
+```csharp
+using System;
+using System.Collections.Generic;
 
-class RealDatabase(Database):
-    def query(self, sql: str):
-        print(f"🗄️ اجرای کوئری: {sql}")
-        return "نتیجه کوئری"
+// رابط دیتابیس
+public interface IDatabase
+{
+    string Query(string sql);
+}
 
-class DatabaseProxy(Database):
-    def __init__(self, user_role: str):
-        self._database = RealDatabase()
-        self.user_role = user_role
-        self._log = []
-    
-    def query(self, sql: str):
-        # بررسی دسترسی
-        if "DELETE" in sql.upper() or "DROP" in sql.upper():
-            if self.user_role != "admin":
-                print("🚫 دسترسی رد شد! فقط ادمین می‌تواند داده حذف کند.")
-                return None
+// دیتابیس واقعی
+public class RealDatabase : IDatabase
+{
+    public string Query(string sql)
+    {
+        Console.WriteLine($"🗄️ اجرای کوئری: {sql}");
+        return "نتیجه کوئری";
+    }
+}
+
+// پروکسی دیتابیس با قابلیت کنترل دسترسی و لاگ‌گیری
+public class DatabaseProxy : IDatabase
+{
+    private RealDatabase _database;
+    private string _userRole;
+    private List<string> _log;
+
+    public DatabaseProxy(string userRole)
+    {
+        _database = new RealDatabase();
+        _userRole = userRole;
+        _log = new List<string>();
+    }
+
+    public string Query(string sql)
+    {
+        // بررسی دسترسی برای عملیات حساس
+        string upperSql = sql.ToUpper();
+        if (upperSql.Contains("DELETE") || upperSql.Contains("DROP"))
+        {
+            if (_userRole != "admin")
+            {
+                Console.WriteLine("🚫 دسترسی رد شد! فقط ادمین می‌تواند داده حذف کند.");
+                return null;
+            }
+        }
+
+        // لاگ کردن کوئری
+        string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        _log.Add($"{timestamp}: {sql}");
+
+        // اجرای کوئری
+        return _database.Query(sql);
+    }
+
+    public void ShowLogs()
+    {
+        Console.WriteLine("\n📋 تاریخچه کوئری‌ها:");
+        foreach (var log in _log)
+        {
+            Console.WriteLine($"  {log}");
+        }
+    }
+}
+
+// نمونه استفاده
+public class DatabaseProxyExample
+{
+    public static void Example()
+    {
+        Console.WriteLine("👤 کاربر عادی:");
+        IDatabase userDb = new DatabaseProxy("user");
+        userDb.Query("SELECT * FROM users");
+        userDb.Query("DELETE FROM users WHERE id=1");
         
-        # لاگ کردن
-        self._log.append(f"{time.time()}: {sql}")
-        
-        # اجرای کوئری
-        return self._database.query(sql)
-    
-    def show_logs(self):
-        print("\n📋 تاریخچه کوئری‌ها:")
-        for log in self._log:
-            print(f"  {log}")
+        Console.WriteLine("\n👨‍💼 کاربر ادمین:");
+        DatabaseProxy adminDb = new DatabaseProxy("admin");
+        adminDb.Query("SELECT * FROM users");
+        adminDb.Query("DELETE FROM users WHERE id=1");
+        adminDb.ShowLogs();
+    }
+}
 ```
 
 ## 🔍 چه زمانی استفاده کنیم؟
