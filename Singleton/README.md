@@ -37,18 +37,18 @@
 ```mermaid
 classDiagram
     class Singleton {
-        -static Singleton instance 🔒
-        -Singleton() 🔒
-        +static GetInstance() Singleton ✨
-        +BusinessLogic() 📋
+        static Singleton instance 🔒
+        Singleton() 🔒
+        static GetInstance() Singleton ✨
+        BusinessLogic() 📋
     }
     
     class Client1 {
-        +UseService() 👤
+        UseService() 👤
     }
     
     class Client2 {
-        +UseService() 👥
+        UseService() 👥
     }
     
     Client1 --> Singleton : همیشه همان نمونه را دریافت می‌کند
@@ -229,16 +229,6 @@ Console.WriteLine($"نام: {user.Name}"); // علی
 5. **Eager vs Lazy**: 
    - **Eager**: نمونه در زمان بارگذاری کلاس ساخته می‌شود
    - **Lazy**: نمونه در اولین استفاده ساخته می‌شود
-
-## 🆚 مقایسه با الگوهای مشابه
-
-| ویژگی | Singleton | Static Class | Dependency Injection |
-|-------|-----------|--------------|---------------------|
-| نمونه‌سازی | یک نمونه | بدون نمونه | چندین نمونه ممکن |
-| وراثت | می‌تواند interface پیاده کند | خیر | بله |
-| تست‌پذیری | سخت | خیلی سخت | آسان |
-| Lazy Loading | بله | خیر | بله |
-| State | دارد | ندارد | دارد |
 
 ## 🔑 نکته کلیدی
 
