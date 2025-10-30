@@ -330,18 +330,29 @@ header p {
     color: var(--text-secondary);
 }
 
-/* Code Blocks */
+/* Code Blocks - Always LTR */
 pre {
     background: #282c34 !important;
     border-radius: 12px;
     padding: 20px;
     overflow-x: auto;
     margin: 20px 0;
+    direction: ltr !important;
+    text-align: left !important;
 }
 
 pre code {
     font-family: 'Consolas', 'Monaco', monospace;
     font-size: 0.9rem;
+    direction: ltr !important;
+    text-align: left !important;
+}
+
+/* Inline code */
+code {
+    direction: ltr;
+    display: inline-block;
+    font-family: 'Consolas', 'Monaco', monospace;
 }
 
 /* Mermaid Diagrams */
@@ -390,6 +401,229 @@ footer p {
     color: var(--secondary-color);
 }
 
+/* Introduction Section Styles */
+.intro-section, .learning-path-section {
+    background: var(--surface-color);
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 40px;
+    border: 2px solid var(--border-color);
+}
+
+.intro-content p {
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.benefit-card {
+    background: var(--bg-color);
+    padding: 25px;
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-color);
+}
+
+.benefit-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.benefit-card h4 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.benefit-card p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.audience-info {
+    background: var(--bg-color);
+    padding: 25px;
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+    margin-top: 30px;
+}
+
+.audience-info h3 {
+    color: var(--primary-color);
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+}
+
+.audience-info ul {
+    list-style: none;
+    padding: 0;
+}
+
+.audience-info li {
+    padding: 10px 0;
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.audience-info li:last-child {
+    border-bottom: none;
+}
+
+/* Learning Path Styles */
+.learning-levels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin: 30px 0;
+}
+
+.level-card {
+    background: var(--bg-color);
+    padding: 25px;
+    border-radius: 12px;
+    border: 3px solid;
+    transition: all 0.3s;
+}
+
+.level-beginner {
+    border-color: #10b981;
+}
+
+.level-intermediate {
+    border-color: #f59e0b;
+}
+
+.level-advanced {
+    border-color: #ef4444;
+}
+
+.level-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.level-card h3 {
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.level-card ol {
+    padding-right: 25px;
+}
+
+.level-card li {
+    margin: 12px 0;
+    line-height: 1.8;
+    color: var(--text-secondary);
+}
+
+.level-card a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.level-card a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+.learning-tip {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid var(--primary-color);
+    margin-top: 30px;
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+/* Navigation Buttons for Pattern Pages */
+.pattern-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px 0;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 25px;
+    background: var(--surface-color);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+    flex: 1;
+    min-width: 200px;
+}
+
+.nav-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.nav-btn.prev {
+    justify-content: flex-start;
+}
+
+.nav-btn.next {
+    justify-content: flex-end;
+}
+
+.nav-btn.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.nav-info {
+    display: flex;
+    flex-direction: column;
+    align-items: inherit;
+}
+
+.nav-label {
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+.nav-title {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     header h1 {
@@ -410,5 +644,25 @@ footer p {
 
     h1 {
         font-size: 2rem;
+    }
+    
+    .intro-section, .learning-path-section {
+        padding: 25px;
+    }
+    
+    .benefits-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .learning-levels {
+        grid-template-columns: 1fr;
+    }
+    
+    .pattern-navigation {
+        flex-direction: column;
+    }
+    
+    .nav-btn {
+        width: 100%;
     }
 }
