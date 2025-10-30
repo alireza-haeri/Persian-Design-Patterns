@@ -11,100 +11,229 @@
 ## 💡 راه‌حل
 طراحی نرم‌افزار خوب اغلب بر اساس اصل جداسازی نگرانی‌ها است که معمولاً منجر به تقسیم برنامه به لایه‌ها می‌شود. الگوی Command پیشنهاد می‌کند که اشیاء GUI نباید درخواست‌ها را مستقیماً ارسال کنند. به جای آن، باید تمام جزئیات درخواست را در یک کلاس فرمان جداگانه قرار دهید.
 
-## 💻 مثال کد (Python)
+## 💻 مثال کد (C#)
 
-```python
-from abc import ABC, abstractmethod
+```csharp
+using System;
+using System.Collections.Generic;
 
-# Command Interface
-class Command(ABC):
-    @abstractmethod
-    def execute(self):
-        pass
-    
-    @abstractmethod
-    def undo(self):
-        pass
+// رابط Command
+public interface ICommand
+{
+    void Execute();
+    void Undo();
+}
 
-# Receiver
-class Light:
-    def __init__(self, location: str):
-        self.location = location
-        self.is_on = False
-    
-    def turn_on(self):
-        self.is_on = True
-        print(f"💡 چراغ {self.location} روشن شد")
-    
-    def turn_off(self):
-        self.is_on = False
-        print(f"💡 چراغ {self.location} خاموش شد")
+// Receiver - دریافت‌کننده
+public class Light
+{
+    private readonly string _location;
+    private bool _isOn;
 
-# Concrete Commands
-class LightOnCommand(Command):
-    def __init__(self, light: Light):
-        self.light = light
-    
-    def execute(self):
-        self.light.turn_on()
-    
-    def undo(self):
-        self.light.turn_off()
+    public Light(string location)
+    {
+        _location = location;
+        _isOn = false;
+    }
 
-class LightOffCommand(Command):
-    def __init__(self, light: Light):
-        self.light = light
-    
-    def execute(self):
-        self.light.turn_off()
-    
-    def undo(self):
-        self.light.turn_on()
+    public void TurnOn()
+    {
+        _isOn = true;
+        Console.WriteLine($"💡 چراغ {_location} روشن شد");
+    }
 
-# Invoker
-class RemoteControl:
-    def __init__(self):
-        self.history = []
-    
-    def execute_command(self, command: Command):
-        command.execute()
-        self.history.append(command)
-    
-    def undo_last(self):
-        if self.history:
-            command = self.history.pop()
-            command.undo()
-            print("↩️ عملیات قبلی لغو شد")
-        else:
-            print("⚠️ تاریخچه‌ای برای بازگشت وجود ندارد")
+    public void TurnOff()
+    {
+        _isOn = false;
+        Console.WriteLine($"💡 چراغ {_location} خاموش شد");
+    }
+}
 
-# استفاده
-if __name__ == "__main__":
-    print("🎮 الگوی Command - کنترل از راه دور\n")
-    
-    living_room_light = Light("اتاق نشیمن")
-    bedroom_light = Light("اتاق خواب")
-    
-    living_on = LightOnCommand(living_room_light)
-    living_off = LightOffCommand(living_room_light)
-    bedroom_on = LightOnCommand(bedroom_light)
-    
-    remote = RemoteControl()
-    
-    remote.execute_command(living_on)
-    remote.execute_command(bedroom_on)
-    remote.execute_command(living_off)
-    
-    remote.undo_last()
-    remote.undo_last()
+// Concrete Command - روشن کردن چراغ
+public class LightOnCommand : ICommand
+{
+    private readonly Light _light;
+
+    public LightOnCommand(Light light)
+    {
+        _light = light;
+    }
+
+    public void Execute()
+    {
+        _light.TurnOn();
+    }
+
+    public void Undo()
+    {
+        _light.TurnOff();
+    }
+}
+
+// Concrete Command - خاموش کردن چراغ
+public class LightOffCommand : ICommand
+{
+    private readonly Light _light;
+
+    public LightOffCommand(Light light)
+    {
+        _light = light;
+    }
+
+    public void Execute()
+    {
+        _light.TurnOff();
+    }
+
+    public void Undo()
+    {
+        _light.TurnOn();
+    }
+}
+
+// Invoker - فراخواننده
+public class RemoteControl
+{
+    private readonly Stack<ICommand> _history = new();
+
+    public void ExecuteCommand(ICommand command)
+    {
+        command.Execute();
+        _history.Push(command);
+    }
+
+    public void UndoLast()
+    {
+        if (_history.Count > 0)
+        {
+            ICommand command = _history.Pop();
+            command.Undo();
+            Console.WriteLine("↩️ عملیات قبلی لغو شد");
+        }
+        else
+        {
+            Console.WriteLine("⚠️ تاریخچه‌ای برای بازگشت وجود ندارد");
+        }
+    }
+}
+
+// استفاده از الگو
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("🎮 الگوی Command - کنترل از راه دور\n");
+
+        Light livingRoomLight = new Light("اتاق نشیمن");
+        Light bedroomLight = new Light("اتاق خواب");
+
+        LightOnCommand livingOn = new LightOnCommand(livingRoomLight);
+        LightOffCommand livingOff = new LightOffCommand(livingRoomLight);
+        LightOnCommand bedroomOn = new LightOnCommand(bedroomLight);
+
+        RemoteControl remote = new RemoteControl();
+
+        remote.ExecuteCommand(livingOn);
+        remote.ExecuteCommand(bedroomOn);
+        remote.ExecuteCommand(livingOff);
+
+        remote.UndoLast();
+        remote.UndoLast();
+    }
+}
+
+/* خروجی:
+🎮 الگوی Command - کنترل از راه دور
+
+💡 چراغ اتاق نشیمن روشن شد
+💡 چراغ اتاق خواب روشن شد
+💡 چراغ اتاق نشیمن خاموش شد
+💡 چراغ اتاق نشیمن روشن شد
+↩️ عملیات قبلی لغو شد
+💡 چراغ اتاق خواب خاموش شد
+↩️ عملیات قبلی لغو شد
+*/
 ```
 
 ## 🔍 چه زمانی استفاده کنیم؟
 
-1. **زمانی که می‌خواهید عملیات را پارامتری کنید**
-2. **زمانی که می‌خواهید عملیات را صف کنید یا زمان‌بندی کنید**
-3. **زمانی که می‌خواهید عملیات Undo/Redo را پیاده‌سازی کنید**
+1. **پارامتری کردن عملیات**: زمانی که می‌خواهید عملیات را پارامتری کنید
+2. **صف کردن**: زمانی که می‌خواهید عملیات را صف کنید یا زمان‌بندی کنید
+3. **Undo/Redo**: زمانی که می‌خواهید عملیات Undo/Redo را پیاده‌سازی کنید
+4. **Logging**: ثبت تاریخچه عملیات برای audit trail
+5. **تراکنش**: پشتیبانی از عملیات تراکنشی
+
+## ✅ مزایا
+
+- **جداسازی**: فراخواننده و دریافت‌کننده از هم جدا می‌شوند
+- **Undo/Redo**: پشتیبانی آسان از بازگشت عملیات
+- **Macro Commands**: امکان ترکیب چند فرمان
+- **Queuing**: صف کردن و زمان‌بندی فرمان‌ها
+- **اصل Open/Closed**: اضافه کردن فرمان‌های جدید بدون تغییر کد موجود
+
+## ❌ معایب
+
+- **تعداد کلاس‌ها**: برای هر عملیات یک کلاس فرمان جدید
+- **پیچیدگی**: ممکن است برای عملیات ساده، بیش از حد پیچیده باشد
+
+## 📊 نمودار کلاس
+
+```mermaid
+classDiagram
+    class ICommand {
+        <<interface>>
+        +Execute()
+        +Undo()
+    }
+    
+    class RemoteControl {
+        -Stack~ICommand~ history
+        +ExecuteCommand(command)
+        +UndoLast()
+    }
+    
+    class LightOnCommand {
+        -Light light
+        +Execute()
+        +Undo()
+    }
+    
+    class LightOffCommand {
+        -Light light
+        +Execute()
+        +Undo()
+    }
+    
+    class Light {
+        -string location
+        -bool isOn
+        +TurnOn()
+        +TurnOff()
+    }
+    
+    ICommand <|.. LightOnCommand
+    ICommand <|.. LightOffCommand
+    LightOnCommand --> Light
+    LightOffCommand --> Light
+    RemoteControl --> ICommand
+```
+
+## 🎯 کاربردهای واقعی
+
+1. **سیستم‌های GUI**: دکمه‌ها، منوها، کلیدهای میانبر
+2. **ویرایشگرهای متن**: Undo/Redo operations
+3. **بازی‌ها**: ذخیره و replay حرکات بازیکن
+4. **سیستم‌های صف**: Message queues, Job schedulers
+5. **تراکنش‌های پایگاه داده**: Rollback operations
+6. **Macro Recording**: ضبط و اجرای توالی عملیات
+
+## 🔑 نکات کلیدی
+
+- **Receiver vs Command**: Receiver عملیات واقعی را انجام می‌دهد، Command فقط درخواست را کپسوله می‌کند
+- **Invoker**: نیازی به دانستن جزئیات فرمان ندارد
+- **History**: با نگهداری تاریخچه، می‌توان Undo/Redo پیاده‌سازی کرد
+- **Macro Commands**: می‌توان یک فرمان که چند فرمان دیگر را اجرا کند، ساخت
 
 ---
 
-> **یادآوری**: Command درخواست‌ها را به اشیاء تبدیل می‌کند! 🎯
+> **یادآوری**: Command درخواست‌ها را به اشیاء مستقل تبدیل می‌کند و امکانات قدرتمندی مثل Undo/Redo و Queuing را فراهم می‌آورد! 🎮
