@@ -58,146 +58,335 @@
 ### معایب ❌
 - ممکن است ارائه یک رابط مشترک برای کلاس‌هایی که عملکردشان خیلی متفاوت است دشوار باشد
 
-## 💻 مثال کد (Python)
+## 💻 مثال کد (C#)
 
-```python
-from abc import ABC, abstractmethod
-from typing import List
+```csharp
+using System;
+using System.Collections.Generic;
 
-# Component
-class FileSystemComponent(ABC):
-    def __init__(self, name: str):
-        self.name = name
-    
-    @abstractmethod
-    def get_size(self) -> int:
-        pass
-    
-    @abstractmethod
-    def display(self, indent: str = ""):
-        pass
+namespace CompositePattern
+{
+    // Component - رابط اصلی برای تمام اجزای سیستم فایل
+    public abstract class FileSystemComponent
+    {
+        protected string name;
 
-# Leaf
-class File(FileSystemComponent):
-    def __init__(self, name: str, size: int):
-        super().__init__(name)
-        self.size = size
-    
-    def get_size(self) -> int:
-        return self.size
-    
-    def display(self, indent: str = ""):
-        print(f"{indent}📄 {self.name} ({self.size} KB)")
+        public FileSystemComponent(string name)
+        {
+            this.name = name;
+        }
 
-# Composite
-class Directory(FileSystemComponent):
-    def __init__(self, name: str):
-        super().__init__(name)
-        self.children: List[FileSystemComponent] = []
-    
-    def add(self, component: FileSystemComponent):
-        self.children.append(component)
-        return self
-    
-    def remove(self, component: FileSystemComponent):
-        self.children.remove(component)
-    
-    def get_size(self) -> int:
-        total = 0
-        for child in self.children:
-            total += child.get_size()
-        return total
-    
-    def display(self, indent: str = ""):
-        print(f"{indent}📁 {self.name}/ ({self.get_size()} KB)")
-        for child in self.children:
-            child.display(indent + "  ")
+        // متد انتزاعی برای محاسبه حجم
+        public abstract int GetSize();
 
-# استفاده
-if __name__ == "__main__":
-    print("🗂️ الگوی Composite - سیستم فایل\n")
-    print("=" * 60)
-    
-    # ایجاد فایل‌ها
-    file1 = File("document.txt", 10)
-    file2 = File("photo.jpg", 500)
-    file3 = File("video.mp4", 5000)
-    file4 = File("music.mp3", 300)
-    file5 = File("report.pdf", 200)
-    
-    # ایجاد دایرکتوری‌ها
-    documents = Directory("Documents")
-    documents.add(file1)
-    documents.add(file5)
-    
-    media = Directory("Media")
-    pictures = Directory("Pictures")
-    pictures.add(file2)
-    
-    videos = Directory("Videos")
-    videos.add(file3)
-    
-    music = Directory("Music")
-    music.add(file4)
-    
-    media.add(pictures)
-    media.add(videos)
-    media.add(music)
-    
-    root = Directory("Root")
-    root.add(documents)
-    root.add(media)
-    
-    # نمایش ساختار
-    print("\n📊 ساختار سیستم فایل:")
-    print("-" * 60)
-    root.display()
-    
-    print(f"\n\n💾 حجم کل: {root.get_size()} KB")
+        // متد انتزاعی برای نمایش ساختار
+        public abstract void Display(string indent = "");
+    }
+
+    // Leaf - کلاس فایل که برگ درخت است و فرزندی ندارد
+    public class File : FileSystemComponent
+    {
+        private int size;
+
+        public File(string name, int size) : base(name)
+        {
+            this.size = size;
+        }
+
+        // بازگرداندن حجم فایل
+        public override int GetSize()
+        {
+            return size;
+        }
+
+        // نمایش اطلاعات فایل
+        public override void Display(string indent = "")
+        {
+            Console.WriteLine($"{indent}📄 {name} ({size} KB)");
+        }
+    }
+
+    // Composite - کلاس دایرکتوری که می‌تواند فرزند داشته باشد
+    public class Directory : FileSystemComponent
+    {
+        private List<FileSystemComponent> children;
+
+        public Directory(string name) : base(name)
+        {
+            children = new List<FileSystemComponent>();
+        }
+
+        // افزودن یک جزء (فایل یا دایرکتوری) به دایرکتوری
+        public Directory Add(FileSystemComponent component)
+        {
+            children.Add(component);
+            return this;
+        }
+
+        // حذف یک جزء از دایرکتوری
+        public void Remove(FileSystemComponent component)
+        {
+            children.Remove(component);
+        }
+
+        // محاسبه حجم کل با جمع حجم تمام فرزندان
+        public override int GetSize()
+        {
+            int total = 0;
+            foreach (var child in children)
+            {
+                total += child.GetSize();
+            }
+            return total;
+        }
+
+        // نمایش ساختار دایرکتوری و فرزندانش به صورت درختی
+        public override void Display(string indent = "")
+        {
+            Console.WriteLine($"{indent}📁 {name}/ ({GetSize()} KB)");
+            foreach (var child in children)
+            {
+                child.Display(indent + "  ");
+            }
+        }
+    }
+
+    // کلاس اصلی برای اجرای برنامه
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // تنظیم کدگذاری برای نمایش صحیح یونیکد (ایموجی‌ها)
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            Console.WriteLine("🗂️ الگوی Composite - سیستم فایل\n");
+            Console.WriteLine(new string('=', 60));
+
+            // ایجاد فایل‌ها
+            File file1 = new File("document.txt", 10);
+            File file2 = new File("photo.jpg", 500);
+            File file3 = new File("video.mp4", 5000);
+            File file4 = new File("music.mp3", 300);
+            File file5 = new File("report.pdf", 200);
+
+            // ایجاد دایرکتوری اسناد و افزودن فایل‌ها
+            Directory documents = new Directory("Documents");
+            documents.Add(file1);
+            documents.Add(file5);
+
+            // ایجاد دایرکتوری تصاویر
+            Directory pictures = new Directory("Pictures");
+            pictures.Add(file2);
+
+            // ایجاد دایرکتوری ویدیوها
+            Directory videos = new Directory("Videos");
+            videos.Add(file3);
+
+            // ایجاد دایرکتوری موسیقی
+            Directory music = new Directory("Music");
+            music.Add(file4);
+
+            // ایجاد دایرکتوری رسانه و افزودن زیرشاخه‌ها
+            Directory media = new Directory("Media");
+            media.Add(pictures);
+            media.Add(videos);
+            media.Add(music);
+
+            // ایجاد دایرکتوری ریشه و افزودن دایرکتوری‌های اصلی
+            Directory root = new Directory("Root");
+            root.Add(documents);
+            root.Add(media);
+
+            // نمایش ساختار کامل سیستم فایل
+            Console.WriteLine("\n📊 ساختار سیستم فایل:");
+            Console.WriteLine(new string('-', 60));
+            root.Display();
+
+            // نمایش حجم کل
+            Console.WriteLine($"\n\n💾 حجم کل: {root.GetSize()} KB");
+
+            Console.WriteLine("\n\nبرای خروج یک کلید را فشار دهید...");
+            Console.ReadKey();
+        }
+    }
+}
+```
+
+### 📋 خروجی برنامه:
+```
+🗂️ الگوی Composite - سیستم فایل
+
+============================================================
+
+📊 ساختار سیستم فایل:
+------------------------------------------------------------
+📁 Root/ (6010 KB)
+  📁 Documents/ (210 KB)
+    📄 document.txt (10 KB)
+    📄 report.pdf (200 KB)
+  📁 Media/ (5800 KB)
+    📁 Pictures/ (500 KB)
+      📄 photo.jpg (500 KB)
+    📁 Videos/ (5000 KB)
+      📄 video.mp4 (5000 KB)
+    📁 Music/ (300 KB)
+      📄 music.mp3 (300 KB)
+
+
+💾 حجم کل: 6010 KB
+
+برای خروج یک کلید را فشار دهید...
 ```
 
 ## 🎯 مثال کاربردی واقعی
 
 ### مثال 1: ساختار سازمانی
-```python
-class Employee(ABC):
-    def __init__(self, name: str, salary: int):
-        self.name = name
-        self.salary = salary
-    
-    @abstractmethod
-    def get_salary(self) -> int:
-        pass
-    
-    @abstractmethod
-    def display(self, indent: str = ""):
-        pass
+```csharp
+using System;
+using System.Collections.Generic;
 
-class Developer(Employee):
-    def get_salary(self) -> int:
-        return self.salary
-    
-    def display(self, indent: str = ""):
-        print(f"{indent}👨‍💻 {self.name} - توسعه‌دهنده (حقوق: {self.salary})")
+namespace CompositePattern.OrganizationalStructure
+{
+    // Component - رابط اصلی برای تمام کارمندان
+    public abstract class Employee
+    {
+        protected string name;
+        protected int salary;
 
-class Manager(Employee):
-    def __init__(self, name: str, salary: int):
-        super().__init__(name, salary)
-        self.subordinates: List[Employee] = []
-    
-    def add(self, employee: Employee):
-        self.subordinates.append(employee)
-    
-    def get_salary(self) -> int:
-        total = self.salary
-        for emp in self.subordinates:
-            total += emp.get_salary()
-        return total
-    
-    def display(self, indent: str = ""):
-        print(f"{indent}👔 {self.name} - مدیر (حقوق: {self.salary})")
-        for emp in self.subordinates:
-            emp.display(indent + "  ")
+        public Employee(string name, int salary)
+        {
+            this.name = name;
+            this.salary = salary;
+        }
+
+        // محاسبه مجموع حقوق
+        public abstract int GetSalary();
+
+        // نمایش ساختار سازمانی
+        public abstract void Display(string indent = "");
+    }
+
+    // Leaf - کلاس توسعه‌دهنده که برگ درخت است
+    public class Developer : Employee
+    {
+        public Developer(string name, int salary) : base(name, salary)
+        {
+        }
+
+        public override int GetSalary()
+        {
+            return salary;
+        }
+
+        public override void Display(string indent = "")
+        {
+            Console.WriteLine($"{indent}👨‍💻 {name} - توسعه‌دهنده (حقوق: {salary:N0} تومان)");
+        }
+    }
+
+    // Composite - کلاس مدیر که می‌تواند زیرمجموعه داشته باشد
+    public class Manager : Employee
+    {
+        private List<Employee> subordinates;
+
+        public Manager(string name, int salary) : base(name, salary)
+        {
+            subordinates = new List<Employee>();
+        }
+
+        // افزودن کارمند به زیرمجموعه
+        public void Add(Employee employee)
+        {
+            subordinates.Add(employee);
+        }
+
+        // محاسبه مجموع حقوق مدیر و تمام زیرمجموعه‌ها
+        public override int GetSalary()
+        {
+            int total = salary;
+            foreach (var emp in subordinates)
+            {
+                total += emp.GetSalary();
+            }
+            return total;
+        }
+
+        // نمایش مدیر و تمام زیرمجموعه‌های او
+        public override void Display(string indent = "")
+        {
+            Console.WriteLine($"{indent}👔 {name} - مدیر (حقوق: {salary:N0} تومان)");
+            foreach (var emp in subordinates)
+            {
+                emp.Display(indent + "  ");
+            }
+        }
+    }
+
+    // مثال استفاده
+    class OrganizationalDemo
+    {
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            Console.WriteLine("🏢 الگوی Composite - ساختار سازمانی\n");
+            Console.WriteLine(new string('=', 60));
+
+            // ایجاد توسعه‌دهندگان
+            Developer dev1 = new Developer("علی احمدی", 15000000);
+            Developer dev2 = new Developer("سارا محمدی", 18000000);
+            Developer dev3 = new Developer("رضا کریمی", 16000000);
+            Developer dev4 = new Developer("مریم رضایی", 17000000);
+
+            // ایجاد مدیران میانی
+            Manager techLead1 = new Manager("حسین نوری", 25000000);
+            techLead1.Add(dev1);
+            techLead1.Add(dev2);
+
+            Manager techLead2 = new Manager("فاطمه صادقی", 24000000);
+            techLead2.Add(dev3);
+            techLead2.Add(dev4);
+
+            // ایجاد مدیر ارشد
+            Manager cto = new Manager("محمد رحیمی", 40000000);
+            cto.Add(techLead1);
+            cto.Add(techLead2);
+
+            // نمایش ساختار سازمانی
+            Console.WriteLine("\n👥 ساختار سازمانی:");
+            Console.WriteLine(new string('-', 60));
+            cto.Display();
+
+            // محاسبه هزینه کل حقوق
+            Console.WriteLine($"\n\n💰 مجموع حقوق بخش فنی: {cto.GetSalary():N0} تومان");
+
+            Console.WriteLine("\nبرای خروج یک کلید را فشار دهید...");
+            Console.ReadKey();
+        }
+    }
+}
+```
+
+### 📋 خروجی برنامه:
+```
+🏢 الگوی Composite - ساختار سازمانی
+
+============================================================
+
+👥 ساختار سازمانی:
+------------------------------------------------------------
+👔 محمد رحیمی - مدیر (حقوق: 40,000,000 تومان)
+  👔 حسین نوری - مدیر (حقوق: 25,000,000 تومان)
+    👨‍💻 علی احمدی - توسعه‌دهنده (حقوق: 15,000,000 تومان)
+    👨‍💻 سارا محمدی - توسعه‌دهنده (حقوق: 18,000,000 تومان)
+  👔 فاطمه صادقی - مدیر (حقوق: 24,000,000 تومان)
+    👨‍💻 رضا کریمی - توسعه‌دهنده (حقوق: 16,000,000 تومان)
+    👨‍💻 مریم رضایی - توسعه‌دهنده (حقوق: 17,000,000 تومان)
+
+
+💰 مجموع حقوق بخش فنی: 155,000,000 تومان
+
+برای خروج یک کلید را فشار دهید...
 ```
 
 ## 🔍 چه زمانی استفاده کنیم؟
