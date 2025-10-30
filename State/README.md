@@ -3,69 +3,150 @@
 ## 🎯 هدف
 الگوی State یک الگوی طراحی رفتاری است که به یک شیء اجازه می‌دهد رفتار خود را تغییر دهد وقتی وضعیت داخلی آن تغییر می‌کند. به نظر می‌رسد شیء کلاس خود را تغییر داده است.
 
-## 💻 مثال کد (Python)
+## 💻 مثال کد (C#)
 
-```python
-from abc import ABC, abstractmethod
+```csharp
+using System;
 
-class State(ABC):
-    @abstractmethod
-    def insert_coin(self, machine):
-        pass
-    
-    @abstractmethod
-    def eject_coin(self, machine):
-        pass
-    
-    @abstractmethod
-    def dispense(self, machine):
-        pass
+namespace StatePattern
+{
+    // رابط State - وضعیت
+    public interface IState
+    {
+        void InsertCoin(VendingMachine machine);
+        void EjectCoin(VendingMachine machine);
+        void Dispense(VendingMachine machine);
+    }
 
-class NoCoinState(State):
-    def insert_coin(self, machine):
-        print("💰 سکه وارد شد")
-        machine.set_state(machine.has_coin_state)
-    
-    def eject_coin(self, machine):
-        print("❌ سکه‌ای وجود ندارد")
-    
-    def dispense(self, machine):
-        print("❌ لطفاً ابتدا سکه وارد کنید")
+    // Concrete State - وضعیت بدون سکه
+    public class NoCoinState : IState
+    {
+        public void InsertCoin(VendingMachine machine)
+        {
+            Console.WriteLine("💰 سکه وارد شد");
+            machine.SetState(machine.HasCoinState);
+        }
 
-class HasCoinState(State):
-    def insert_coin(self, machine):
-        print("⚠️ قبلاً سکه وارد شده است")
-    
-    def eject_coin(self, machine):
-        print("💸 سکه برگردانده شد")
-        machine.set_state(machine.no_coin_state)
-    
-    def dispense(self, machine):
-        print("🥤 نوشیدنی در حال خروج...")
-        machine.set_state(machine.no_coin_state)
+        public void EjectCoin(VendingMachine machine)
+        {
+            Console.WriteLine("❌ سکه‌ای وجود ندارد");
+        }
 
-class VendingMachine:
-    def __init__(self):
-        self.no_coin_state = NoCoinState()
-        self.has_coin_state = HasCoinState()
-        self.current_state = self.no_coin_state
-    
-    def set_state(self, state: State):
-        self.current_state = state
-    
-    def insert_coin(self):
-        self.current_state.insert_coin(self)
-    
-    def eject_coin(self):
-        self.current_state.eject_coin(self)
-    
-    def dispense(self):
-        self.current_state.dispense(self)
+        public void Dispense(VendingMachine machine)
+        {
+            Console.WriteLine("❌ لطفاً ابتدا سکه وارد کنید");
+        }
+    }
 
-# استفاده
-machine = VendingMachine()
-machine.insert_coin()
-machine.dispense()
+    // Concrete State - وضعیت دارای سکه
+    public class HasCoinState : IState
+    {
+        public void InsertCoin(VendingMachine machine)
+        {
+            Console.WriteLine("⚠️ قبلاً سکه وارد شده است");
+        }
+
+        public void EjectCoin(VendingMachine machine)
+        {
+            Console.WriteLine("💸 سکه برگردانده شد");
+            machine.SetState(machine.NoCoinState);
+        }
+
+        public void Dispense(VendingMachine machine)
+        {
+            Console.WriteLine("🥤 نوشیدنی در حال خروج...");
+            machine.SetState(machine.NoCoinState);
+        }
+    }
+
+    // Context - دستگاه فروش خودکار
+    public class VendingMachine
+    {
+        public IState NoCoinState { get; private set; }
+        public IState HasCoinState { get; private set; }
+        private IState _currentState;
+
+        public VendingMachine()
+        {
+            NoCoinState = new NoCoinState();
+            HasCoinState = new HasCoinState();
+            _currentState = NoCoinState;
+        }
+
+        public void SetState(IState state)
+        {
+            _currentState = state;
+        }
+
+        public void InsertCoin()
+        {
+            _currentState.InsertCoin(this);
+        }
+
+        public void EjectCoin()
+        {
+            _currentState.EjectCoin(this);
+        }
+
+        public void Dispense()
+        {
+            _currentState.Dispense(this);
+        }
+    }
+
+    // برنامه اصلی
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            Console.WriteLine("🎭 الگوی State - دستگاه فروش خودکار\n");
+            Console.WriteLine(new string('=', 60));
+
+            VendingMachine machine = new VendingMachine();
+
+            Console.WriteLine("\n🔄 سناریو 1: وارد کردن سکه و دریافت نوشیدنی");
+            Console.WriteLine(new string('-', 60));
+            machine.InsertCoin();
+            machine.Dispense();
+
+            Console.WriteLine("\n🔄 سناریو 2: تلاش برای دریافت نوشیدنی بدون سکه");
+            Console.WriteLine(new string('-', 60));
+            machine.Dispense();
+
+            Console.WriteLine("\n🔄 سناریو 3: وارد کردن و برگرداندن سکه");
+            Console.WriteLine(new string('-', 60));
+            machine.InsertCoin();
+            machine.EjectCoin();
+
+            Console.WriteLine("\n" + new string('=', 60));
+        }
+    }
+}
+```
+
+### 📤 خروجی برنامه:
+```
+🎭 الگوی State - دستگاه فروش خودکار
+
+============================================================
+
+🔄 سناریو 1: وارد کردن سکه و دریافت نوشیدنی
+------------------------------------------------------------
+💰 سکه وارد شد
+🥤 نوشیدنی در حال خروج...
+
+🔄 سناریو 2: تلاش برای دریافت نوشیدنی بدون سکه
+------------------------------------------------------------
+❌ لطفاً ابتدا سکه وارد کنید
+
+🔄 سناریو 3: وارد کردن و برگرداندن سکه
+------------------------------------------------------------
+💰 سکه وارد شد
+💸 سکه برگردانده شد
+
+============================================================
 ```
 
 ## 🔍 چه زمانی استفاده کنیم؟

@@ -55,169 +55,298 @@ Facade کلاسی است که یک رابط ساده به یک زیرسیستم 
 ### معایب ❌
 - Facade می‌تواند به یک شیء خدای (God Object) وابسته به تمام کلاس‌های برنامه تبدیل شود
 
-## 💻 مثال کد (Python)
+## 💻 مثال کد (C#)
 
-```python
-# زیرسیستم پیچیده - سینمای خانگی
+```csharp
+using System;
 
-class Amplifier:
-    def on(self):
-        print("🔊 آمپلی‌فایر روشن شد")
-    
-    def off(self):
-        print("🔊 آمپلی‌فایر خاموش شد")
-    
-    def set_volume(self, level: int):
-        print(f"🔊 تنظیم صدا روی {level}")
+namespace FacadePattern
+{
+    // زیرسیستم پیچیده - سینمای خانگی
 
-class DVDPlayer:
-    def on(self):
-        print("📀 پخش‌کننده DVD روشن شد")
-    
-    def off(self):
-        print("📀 پخش‌کننده DVD خاموش شد")
-    
-    def play(self, movie: str):
-        print(f"📀 پخش فیلم: {movie}")
-    
-    def stop(self):
-        print("📀 توقف پخش")
+    // کلاس آمپلی‌فایر
+    public class Amplifier
+    {
+        public void On()
+        {
+            Console.WriteLine("🔊 آمپلی‌فایر روشن شد");
+        }
 
-class Projector:
-    def on(self):
-        print("📽️ پروژکتور روشن شد")
-    
-    def off(self):
-        print("📽️ پروژکتور خاموش شد")
-    
-    def wide_screen_mode(self):
-        print("📽️ حالت صفحه وسیع فعال شد")
+        public void Off()
+        {
+            Console.WriteLine("🔊 آمپلی‌فایر خاموش شد");
+        }
 
-class Lights:
-    def dim(self, level: int):
-        print(f"💡 نور کم شد به {level}%")
-    
-    def on(self):
-        print("💡 نور روشن شد")
+        public void SetVolume(int level)
+        {
+            Console.WriteLine($"🔊 تنظیم صدا روی {level}");
+        }
+    }
 
-class Screen:
-    def down(self):
-        print("🎬 پرده پایین آمد")
-    
-    def up(self):
-        print("🎬 پرده بالا رفت")
+    // کلاس پخش‌کننده DVD
+    public class DVDPlayer
+    {
+        public void On()
+        {
+            Console.WriteLine("📀 پخش‌کننده DVD روشن شد");
+        }
 
-class SoundSystem:
-    def on(self):
-        print("🎵 سیستم صوتی روشن شد")
-    
-    def off(self):
-        print("🎵 سیستم صوتی خاموش شد")
-    
-    def set_surround_sound(self):
-        print("🎵 صدای فراگیر فعال شد")
+        public void Off()
+        {
+            Console.WriteLine("📀 پخش‌کننده DVD خاموش شد");
+        }
 
-# Facade
-class HomeTheaterFacade:
-    def __init__(self):
-        self.amplifier = Amplifier()
-        self.dvd_player = DVDPlayer()
-        self.projector = Projector()
-        self.lights = Lights()
-        self.screen = Screen()
-        self.sound_system = SoundSystem()
-    
-    def watch_movie(self, movie: str):
-        print("\n🎬 آماده‌سازی برای تماشای فیلم...\n")
-        self.lights.dim(10)
-        self.screen.down()
-        self.projector.on()
-        self.projector.wide_screen_mode()
-        self.amplifier.on()
-        self.amplifier.set_volume(5)
-        self.sound_system.on()
-        self.sound_system.set_surround_sound()
-        self.dvd_player.on()
-        self.dvd_player.play(movie)
-        print("\n✅ همه چیز آماده است! لذت ببرید! 🍿\n")
-    
-    def end_movie(self):
-        print("\n🛑 خاموش کردن سینمای خانگی...\n")
-        self.dvd_player.stop()
-        self.dvd_player.off()
-        self.sound_system.off()
-        self.amplifier.off()
-        self.projector.off()
-        self.screen.up()
-        self.lights.on()
-        print("\n✅ همه چیز خاموش شد. خوش گذشت! 👋\n")
+        public void Play(string movie)
+        {
+            Console.WriteLine($"📀 پخش فیلم: {movie}");
+        }
 
-# استفاده
-if __name__ == "__main__":
-    print("🏠 الگوی Facade - سینمای خانگی")
-    print("=" * 60)
-    
-    home_theater = HomeTheaterFacade()
-    
-    # تماشای فیلم
-    home_theater.watch_movie("مردانی که زنی را دوست داشتند")
-    
-    input("فشار دهید Enter برای پایان فیلم...")
-    
-    # پایان فیلم
-    home_theater.end_movie()
+        public void Stop()
+        {
+            Console.WriteLine("📀 توقف پخش");
+        }
+    }
+
+    // کلاس پروژکتور
+    public class Projector
+    {
+        public void On()
+        {
+            Console.WriteLine("📽️ پروژکتور روشن شد");
+        }
+
+        public void Off()
+        {
+            Console.WriteLine("📽️ پروژکتور خاموش شد");
+        }
+
+        public void WideScreenMode()
+        {
+            Console.WriteLine("📽️ حالت صفحه وسیع فعال شد");
+        }
+    }
+
+    // کلاس نورپردازی
+    public class Lights
+    {
+        public void Dim(int level)
+        {
+            Console.WriteLine($"💡 نور کم شد به {level}%");
+        }
+
+        public void On()
+        {
+            Console.WriteLine("💡 نور روشن شد");
+        }
+    }
+
+    // کلاس پرده
+    public class Screen
+    {
+        public void Down()
+        {
+            Console.WriteLine("🎬 پرده پایین آمد");
+        }
+
+        public void Up()
+        {
+            Console.WriteLine("🎬 پرده بالا رفت");
+        }
+    }
+
+    // کلاس سیستم صوتی
+    public class SoundSystem
+    {
+        public void On()
+        {
+            Console.WriteLine("🎵 سیستم صوتی روشن شد");
+        }
+
+        public void Off()
+        {
+            Console.WriteLine("🎵 سیستم صوتی خاموش شد");
+        }
+
+        public void SetSurroundSound()
+        {
+            Console.WriteLine("🎵 صدای فراگیر فعال شد");
+        }
+    }
+
+    // Facade - رابط ساده‌شده
+    public class HomeTheaterFacade
+    {
+        private readonly Amplifier _amplifier;
+        private readonly DVDPlayer _dvdPlayer;
+        private readonly Projector _projector;
+        private readonly Lights _lights;
+        private readonly Screen _screen;
+        private readonly SoundSystem _soundSystem;
+
+        public HomeTheaterFacade()
+        {
+            _amplifier = new Amplifier();
+            _dvdPlayer = new DVDPlayer();
+            _projector = new Projector();
+            _lights = new Lights();
+            _screen = new Screen();
+            _soundSystem = new SoundSystem();
+        }
+
+        public void WatchMovie(string movie)
+        {
+            Console.WriteLine("\n🎬 آماده‌سازی برای تماشای فیلم...\n");
+            _lights.Dim(10);
+            _screen.Down();
+            _projector.On();
+            _projector.WideScreenMode();
+            _amplifier.On();
+            _amplifier.SetVolume(5);
+            _soundSystem.On();
+            _soundSystem.SetSurroundSound();
+            _dvdPlayer.On();
+            _dvdPlayer.Play(movie);
+            Console.WriteLine("\n✅ همه چیز آماده است! لذت ببرید! 🍿\n");
+        }
+
+        public void EndMovie()
+        {
+            Console.WriteLine("\n🛑 خاموش کردن سینمای خانگی...\n");
+            _dvdPlayer.Stop();
+            _dvdPlayer.Off();
+            _soundSystem.Off();
+            _amplifier.Off();
+            _projector.Off();
+            _screen.Up();
+            _lights.On();
+            Console.WriteLine("\n✅ همه چیز خاموش شد. خوش گذشت! 👋\n");
+        }
+    }
+
+    // برنامه اصلی
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            Console.WriteLine("🏠 الگوی Facade - سینمای خانگی");
+            Console.WriteLine(new string('=', 60));
+
+            HomeTheaterFacade homeTheater = new HomeTheaterFacade();
+
+            // تماشای فیلم
+            homeTheater.WatchMovie("مردانی که زنی را دوست داشتند");
+
+            Console.WriteLine("\nبرای پایان فیلم Enter را فشار دهید...");
+            Console.ReadLine();
+
+            // پایان فیلم
+            homeTheater.EndMovie();
+
+            Console.WriteLine(new string('=', 60));
+        }
+    }
+}
 ```
 
 ## 🎯 مثال کاربردی واقعی
 
 ### مثال 1: سیستم سفارش آنلاین
-```python
-class Inventory:
-    def check_stock(self, product_id: str) -> bool:
-        print(f"📦 بررسی موجودی محصول {product_id}")
-        return True
+```csharp
+using System;
 
-class Payment:
-    def process_payment(self, amount: float) -> bool:
-        print(f"💳 پردازش پرداخت {amount:,} تومان")
-        return True
+namespace FacadePattern.RealWorld
+{
+    // کلاس‌های زیرسیستم
+    public class Inventory
+    {
+        public bool CheckStock(string productId)
+        {
+            Console.WriteLine($"📦 بررسی موجودی محصول {productId}");
+            return true;
+        }
+    }
 
-class Shipping:
-    def arrange_shipping(self, address: str):
-        print(f"🚚 ترتیب ارسال به آدرس: {address}")
+    public class Payment
+    {
+        public bool ProcessPayment(decimal amount)
+        {
+            Console.WriteLine($"💳 پردازش پرداخت {amount:N0} تومان");
+            return true;
+        }
+    }
 
-class Notification:
-    def send_confirmation(self, email: str):
-        print(f"📧 ارسال ایمیل تایید به {email}")
+    public class Shipping
+    {
+        public void ArrangeShipping(string address)
+        {
+            Console.WriteLine($"🚚 ترتیب ارسال به آدرس: {address}");
+        }
+    }
 
-class OrderFacade:
-    def __init__(self):
-        self.inventory = Inventory()
-        self.payment = Payment()
-        self.shipping = Shipping()
-        self.notification = Notification()
-    
-    def place_order(self, product_id: str, amount: float, 
-                    address: str, email: str):
-        print("\n🛒 شروع فرآیند سفارش...\n")
-        
-        if not self.inventory.check_stock(product_id):
-            print("❌ محصول موجود نیست")
-            return False
-        
-        if not self.payment.process_payment(amount):
-            print("❌ پرداخت ناموفق")
-            return False
-        
-        self.shipping.arrange_shipping(address)
-        self.notification.send_confirmation(email)
-        
-        print("\n✅ سفارش با موفقیت ثبت شد!\n")
-        return True
+    public class Notification
+    {
+        public void SendConfirmation(string email)
+        {
+            Console.WriteLine($"📧 ارسال ایمیل تایید به {email}");
+        }
+    }
 
-# استفاده
-order_system = OrderFacade()
-order_system.place_order("P123", 150000, "تهران، خیابان ولیعصر", "user@example.com")
+    // Facade - رابط ساده برای سیستم سفارش
+    public class OrderFacade
+    {
+        private readonly Inventory _inventory;
+        private readonly Payment _payment;
+        private readonly Shipping _shipping;
+        private readonly Notification _notification;
+
+        public OrderFacade()
+        {
+            _inventory = new Inventory();
+            _payment = new Payment();
+            _shipping = new Shipping();
+            _notification = new Notification();
+        }
+
+        public bool PlaceOrder(string productId, decimal amount, 
+                              string address, string email)
+        {
+            Console.WriteLine("\n🛒 شروع فرآیند سفارش...\n");
+
+            if (!_inventory.CheckStock(productId))
+            {
+                Console.WriteLine("❌ محصول موجود نیست");
+                return false;
+            }
+
+            if (!_payment.ProcessPayment(amount))
+            {
+                Console.WriteLine("❌ پرداخت ناموفق");
+                return false;
+            }
+
+            _shipping.ArrangeShipping(address);
+            _notification.SendConfirmation(email);
+
+            Console.WriteLine("\n✅ سفارش با موفقیت ثبت شد!\n");
+            return true;
+        }
+    }
+
+    // استفاده
+    class OrderDemo
+    {
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            OrderFacade orderSystem = new OrderFacade();
+            orderSystem.PlaceOrder("P123", 150000, 
+                "تهران، خیابان ولیعصر", "user@example.com");
+        }
+    }
+}
 ```
 
 ## 🔍 چه زمانی استفاده کنیم؟

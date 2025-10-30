@@ -72,224 +72,401 @@
 - پیچیدگی کد افزایش می‌یابد زیرا رابط‌ها و کلاس‌های زیادی معرفی می‌شوند
 - اضافه کردن محصول جدید به خانواده نیازمند تغییر در تمام کارخانه‌ها است
 
-## 💻 مثال کد (Python)
+## 💻 مثال کد (C#)
 
-```python
-from abc import ABC, abstractmethod
+```csharp
+using System;
 
-# Abstract Products
-class Chair(ABC):
-    @abstractmethod
-    def sit_on(self) -> str:
-        pass
+namespace AbstractFactoryPattern
+{
+    // Abstract Products - محصولات انتزاعی
+    public interface IChair
+    {
+        string SitOn();
+    }
 
-class Sofa(ABC):
-    @abstractmethod
-    def lie_on(self) -> str:
-        pass
+    public interface ISofa
+    {
+        string LieOn();
+    }
 
-class CoffeeTable(ABC):
-    @abstractmethod
-    def put_on(self) -> str:
-        pass
+    public interface ICoffeeTable
+    {
+        string PutOn();
+    }
 
-# Concrete Products - Modern Style
-class ModernChair(Chair):
-    def sit_on(self) -> str:
-        return "🪑 نشستن روی صندلی مدرن و شیک"
+    // Concrete Products - Modern Style
+    public class ModernChair : IChair
+    {
+        public string SitOn()
+        {
+            return "🪑 نشستن روی صندلی مدرن و شیک";
+        }
+    }
 
-class ModernSofa(Sofa):
-    def lie_on(self) -> str:
-        return "🛋️ دراز کشیدن روی مبل مدرن"
+    public class ModernSofa : ISofa
+    {
+        public string LieOn()
+        {
+            return "🛋️ دراز کشیدن روی مبل مدرن";
+        }
+    }
 
-class ModernCoffeeTable(CoffeeTable):
-    def put_on(self) -> str:
-        return "☕ قرار دادن فنجان روی میز قهوه مدرن"
+    public class ModernCoffeeTable : ICoffeeTable
+    {
+        public string PutOn()
+        {
+            return "☕ قرار دادن فنجان روی میز قهوه مدرن";
+        }
+    }
 
-# Concrete Products - Victorian Style
-class VictorianChair(Chair):
-    def sit_on(self) -> str:
-        return "🪑 نشستن روی صندلی ویکتوریایی کلاسیک"
+    // Concrete Products - Victorian Style
+    public class VictorianChair : IChair
+    {
+        public string SitOn()
+        {
+            return "🪑 نشستن روی صندلی ویکتوریایی کلاسیک";
+        }
+    }
 
-class VictorianSofa(Sofa):
-    def lie_on(self) -> str:
-        return "🛋️ دراز کشیدن روی مبل ویکتوریایی تزئین شده"
+    public class VictorianSofa : ISofa
+    {
+        public string LieOn()
+        {
+            return "🛋️ دراز کشیدن روی مبل ویکتوریایی تزئین شده";
+        }
+    }
 
-class VictorianCoffeeTable(CoffeeTable):
-    def put_on(self) -> str:
-        return "☕ قرار دادن فنجان روی میز قهوه ویکتوریایی منبت‌کاری شده"
+    public class VictorianCoffeeTable : ICoffeeTable
+    {
+        public string PutOn()
+        {
+            return "☕ قرار دادن فنجان روی میز قهوه ویکتوریایی منبت‌کاری شده";
+        }
+    }
 
-# Concrete Products - Art Deco Style
-class ArtDecoChair(Chair):
-    def sit_on(self) -> str:
-        return "🪑 نشستن روی صندلی آرت دکو هنری"
+    // Concrete Products - Art Deco Style
+    public class ArtDecoChair : IChair
+    {
+        public string SitOn()
+        {
+            return "🪑 نشستن روی صندلی آرت دکو هنری";
+        }
+    }
 
-class ArtDecoSofa(Sofa):
-    def lie_on(self) -> str:
-        return "🛋️ دراز کشیدن روی مبل آرت دکو با طراحی هندسی"
+    public class ArtDecoSofa : ISofa
+    {
+        public string LieOn()
+        {
+            return "🛋️ دراز کشیدن روی مبل آرت دکو با طراحی هندسی";
+        }
+    }
 
-class ArtDecoCoffeeTable(CoffeeTable):
-    def put_on(self) -> str:
-        return "☕ قرار دادن فنجان روی میز قهوه آرت دکو"
+    public class ArtDecoCoffeeTable : ICoffeeTable
+    {
+        public string PutOn()
+        {
+            return "☕ قرار دادن فنجان روی میز قهوه آرت دکو";
+        }
+    }
 
-# Abstract Factory
-class FurnitureFactory(ABC):
-    @abstractmethod
-    def create_chair(self) -> Chair:
-        pass
-    
-    @abstractmethod
-    def create_sofa(self) -> Sofa:
-        pass
-    
-    @abstractmethod
-    def create_coffee_table(self) -> CoffeeTable:
-        pass
+    // Abstract Factory - کارخانه انتزاعی
+    public interface IFurnitureFactory
+    {
+        IChair CreateChair();
+        ISofa CreateSofa();
+        ICoffeeTable CreateCoffeeTable();
+    }
 
-# Concrete Factories
-class ModernFurnitureFactory(FurnitureFactory):
-    def create_chair(self) -> Chair:
-        return ModernChair()
-    
-    def create_sofa(self) -> Sofa:
-        return ModernSofa()
-    
-    def create_coffee_table(self) -> CoffeeTable:
-        return ModernCoffeeTable()
+    // Concrete Factories - کارخانه‌های مشخص
+    public class ModernFurnitureFactory : IFurnitureFactory
+    {
+        public IChair CreateChair()
+        {
+            return new ModernChair();
+        }
 
-class VictorianFurnitureFactory(FurnitureFactory):
-    def create_chair(self) -> Chair:
-        return VictorianChair()
-    
-    def create_sofa(self) -> Sofa:
-        return VictorianSofa()
-    
-    def create_coffee_table(self) -> CoffeeTable:
-        return VictorianCoffeeTable()
+        public ISofa CreateSofa()
+        {
+            return new ModernSofa();
+        }
 
-class ArtDecoFurnitureFactory(FurnitureFactory):
-    def create_chair(self) -> Chair:
-        return ArtDecoChair()
-    
-    def create_sofa(self) -> Sofa:
-        return ArtDecoSofa()
-    
-    def create_coffee_table(self) -> CoffeeTable:
-        return ArtDecoCoffeeTable()
+        public ICoffeeTable CreateCoffeeTable()
+        {
+            return new ModernCoffeeTable();
+        }
+    }
 
-# Client Code
-def furnish_room(factory: FurnitureFactory):
-    chair = factory.create_chair()
-    sofa = factory.create_sofa()
-    table = factory.create_coffee_table()
-    
-    print(chair.sit_on())
-    print(sofa.lie_on())
-    print(table.put_on())
-    print()
+    public class VictorianFurnitureFactory : IFurnitureFactory
+    {
+        public IChair CreateChair()
+        {
+            return new VictorianChair();
+        }
 
-if __name__ == "__main__":
-    print("🏭 الگوی Abstract Factory - فروشگاه مبلمان\n")
-    print("=" * 60)
-    
-    print("\n🎨 دکوراسیون مدرن:")
-    print("-" * 60)
-    modern_factory = ModernFurnitureFactory()
-    furnish_room(modern_factory)
-    
-    print("👑 دکوراسیون ویکتوریایی:")
-    print("-" * 60)
-    victorian_factory = VictorianFurnitureFactory()
-    furnish_room(victorian_factory)
-    
-    print("🎭 دکوراسیون آرت دکو:")
-    print("-" * 60)
-    artdeco_factory = ArtDecoFurnitureFactory()
-    furnish_room(artdeco_factory)
+        public ISofa CreateSofa()
+        {
+            return new VictorianSofa();
+        }
+
+        public ICoffeeTable CreateCoffeeTable()
+        {
+            return new VictorianCoffeeTable();
+        }
+    }
+
+    public class ArtDecoFurnitureFactory : IFurnitureFactory
+    {
+        public IChair CreateChair()
+        {
+            return new ArtDecoChair();
+        }
+
+        public ISofa CreateSofa()
+        {
+            return new ArtDecoSofa();
+        }
+
+        public ICoffeeTable CreateCoffeeTable()
+        {
+            return new ArtDecoCoffeeTable();
+        }
+    }
+
+    // Client Code - کد کلاینت
+    class Program
+    {
+        static void FurnishRoom(IFurnitureFactory factory)
+        {
+            IChair chair = factory.CreateChair();
+            ISofa sofa = factory.CreateSofa();
+            ICoffeeTable table = factory.CreateCoffeeTable();
+
+            Console.WriteLine(chair.SitOn());
+            Console.WriteLine(sofa.LieOn());
+            Console.WriteLine(table.PutOn());
+            Console.WriteLine();
+        }
+
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            Console.WriteLine("🏭 الگوی Abstract Factory - فروشگاه مبلمان\n");
+            Console.WriteLine(new string('=', 60));
+
+            Console.WriteLine("\n🎨 دکوراسیون مدرن:");
+            Console.WriteLine(new string('-', 60));
+            IFurnitureFactory modernFactory = new ModernFurnitureFactory();
+            FurnishRoom(modernFactory);
+
+            Console.WriteLine("👑 دکوراسیون ویکتوریایی:");
+            Console.WriteLine(new string('-', 60));
+            IFurnitureFactory victorianFactory = new VictorianFurnitureFactory();
+            FurnishRoom(victorianFactory);
+
+            Console.WriteLine("🎭 دکوراسیون آرت دکو:");
+            Console.WriteLine(new string('-', 60));
+            IFurnitureFactory artDecoFactory = new ArtDecoFurnitureFactory();
+            FurnishRoom(artDecoFactory);
+
+            Console.WriteLine(new string('=', 60));
+        }
+    }
+}
+```
+
+### 📤 خروجی برنامه:
+```
+🏭 الگوی Abstract Factory - فروشگاه مبلمان
+
+============================================================
+
+🎨 دکوراسیون مدرن:
+------------------------------------------------------------
+🪑 نشستن روی صندلی مدرن و شیک
+🛋️ دراز کشیدن روی مبل مدرن
+☕ قرار دادن فنجان روی میز قهوه مدرن
+
+👑 دکوراسیون ویکتوریایی:
+------------------------------------------------------------
+🪑 نشستن روی صندلی ویکتوریایی کلاسیک
+🛋️ دراز کشیدن روی مبل ویکتوریایی تزئین شده
+☕ قرار دادن فنجان روی میز قهوه ویکتوریایی منبت‌کاری شده
+
+🎭 دکوراسیون آرت دکو:
+------------------------------------------------------------
+🪑 نشستن روی صندلی آرت دکو هنری
+🛋️ دراز کشیدن روی مبل آرت دکو با طراحی هندسی
+☕ قرار دادن فنجان روی میز قهوه آرت دکو
+
+============================================================
 ```
 
 ## 🎯 مثال کاربردی واقعی
 
 ### مثال 1: رابط کاربری چند پلتفرمی
-```python
-class Button(ABC):
-    @abstractmethod
-    def render(self) -> str:
-        pass
+```csharp
+// Abstract Products
+public interface IButton
+{
+    string Render();
+}
 
-class Checkbox(ABC):
-    @abstractmethod
-    def render(self) -> str:
-        pass
+public interface ICheckbox
+{
+    string Render();
+}
 
-class WindowsButton(Button):
-    def render(self) -> str:
-        return "🖱️ دکمه ویندوزی رندر شد"
+// Concrete Products - Windows
+public class WindowsButton : IButton
+{
+    public string Render()
+    {
+        return "🖱️ دکمه ویندوزی رندر شد";
+    }
+}
 
-class MacOSButton(Button):
-    def render(self) -> str:
-        return "🖱️ دکمه MacOS رندر شد"
+public class WindowsCheckbox : ICheckbox
+{
+    public string Render()
+    {
+        return "☑️ چک‌باکس ویندوزی رندر شد";
+    }
+}
 
-class WindowsCheckbox(Checkbox):
-    def render(self) -> str:
-        return "☑️ چک‌باکس ویندوزی رندر شد"
+// Concrete Products - MacOS
+public class MacOSButton : IButton
+{
+    public string Render()
+    {
+        return "🖱️ دکمه MacOS رندر شد";
+    }
+}
 
-class MacOSCheckbox(Checkbox):
-    def render(self) -> str:
-        return "☑️ چک‌باکس MacOS رندر شد"
+public class MacOSCheckbox : ICheckbox
+{
+    public string Render()
+    {
+        return "☑️ چک‌باکس MacOS رندر شد";
+    }
+}
 
-class GUIFactory(ABC):
-    @abstractmethod
-    def create_button(self) -> Button:
-        pass
-    
-    @abstractmethod
-    def create_checkbox(self) -> Checkbox:
-        pass
+// Abstract Factory
+public interface IGUIFactory
+{
+    IButton CreateButton();
+    ICheckbox CreateCheckbox();
+}
 
-class WindowsFactory(GUIFactory):
-    def create_button(self) -> Button:
-        return WindowsButton()
-    
-    def create_checkbox(self) -> Checkbox:
-        return WindowsCheckbox()
+// Concrete Factories
+public class WindowsFactory : IGUIFactory
+{
+    public IButton CreateButton()
+    {
+        return new WindowsButton();
+    }
 
-class MacOSFactory(GUIFactory):
-    def create_button(self) -> Button:
-        return MacOSButton()
-    
-    def create_checkbox(self) -> Checkbox:
-        return MacOSCheckbox()
+    public ICheckbox CreateCheckbox()
+    {
+        return new WindowsCheckbox();
+    }
+}
+
+public class MacOSFactory : IGUIFactory
+{
+    public IButton CreateButton()
+    {
+        return new MacOSButton();
+    }
+
+    public ICheckbox CreateCheckbox()
+    {
+        return new MacOSCheckbox();
+    }
+}
 ```
 
 ### مثال 2: سیستم پایگاه داده
-```python
-class Connection(ABC):
-    @abstractmethod
-    def connect(self) -> str:
-        pass
+```csharp
+// Abstract Products
+public interface IConnection
+{
+    string Connect();
+}
 
-class Query(ABC):
-    @abstractmethod
-    def execute(self) -> str:
-        pass
+public interface IQuery
+{
+    string Execute();
+}
 
-class MySQLConnection(Connection):
-    def connect(self) -> str:
-        return "🔌 اتصال به MySQL برقرار شد"
+// Concrete Products - MySQL
+public class MySQLConnection : IConnection
+{
+    public string Connect()
+    {
+        return "🔌 اتصال به MySQL برقرار شد";
+    }
+}
 
-class PostgreSQLConnection(Connection):
-    def connect(self) -> str:
-        return "🔌 اتصال به PostgreSQL برقرار شد"
+public class MySQLQuery : IQuery
+{
+    public string Execute()
+    {
+        return "✅ کوئری MySQL اجرا شد";
+    }
+}
 
-class DatabaseFactory(ABC):
-    @abstractmethod
-    def create_connection(self) -> Connection:
-        pass
-    
-    @abstractmethod
-    def create_query(self) -> Query:
-        pass
+// Concrete Products - PostgreSQL
+public class PostgreSQLConnection : IConnection
+{
+    public string Connect()
+    {
+        return "🔌 اتصال به PostgreSQL برقرار شد";
+    }
+}
+
+public class PostgreSQLQuery : IQuery
+{
+    public string Execute()
+    {
+        return "✅ کوئری PostgreSQL اجرا شد";
+    }
+}
+
+// Abstract Factory
+public interface IDatabaseFactory
+{
+    IConnection CreateConnection();
+    IQuery CreateQuery();
+}
+
+// Concrete Factories
+public class MySQLFactory : IDatabaseFactory
+{
+    public IConnection CreateConnection()
+    {
+        return new MySQLConnection();
+    }
+
+    public IQuery CreateQuery()
+    {
+        return new MySQLQuery();
+    }
+}
+
+public class PostgreSQLFactory : IDatabaseFactory
+{
+    public IConnection CreateConnection()
+    {
+        return new PostgreSQLConnection();
+    }
+
+    public IQuery CreateQuery()
+    {
+        return new PostgreSQLQuery();
+    }
+}
 ```
 
 ## 🔍 چه زمانی استفاده کنیم؟

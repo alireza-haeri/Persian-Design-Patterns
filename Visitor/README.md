@@ -3,67 +3,141 @@
 ## 🎯 هدف
 الگوی Visitor یک الگوی طراحی رفتاری است که به شما اجازه می‌دهد الگوریتم‌های جدید را از اشیاءی که روی آن‌ها عمل می‌کنند جدا کنید.
 
-## 💻 مثال کد (Python)
+## 💻 مثال کد (C#)
 
-```python
-from abc import ABC, abstractmethod
+```csharp
+using System;
+using System.Collections.Generic;
 
-class Visitor(ABC):
-    @abstractmethod
-    def visit_book(self, book):
-        pass
-    
-    @abstractmethod
-    def visit_fruit(self, fruit):
-        pass
+namespace VisitorPattern
+{
+    // رابط Visitor - بازدیدکننده
+    public interface IVisitor
+    {
+        void VisitBook(Book book);
+        void VisitFruit(Fruit fruit);
+    }
 
-class ShoppingItem(ABC):
-    @abstractmethod
-    def accept(self, visitor: Visitor):
-        pass
+    // رابط Element - عنصر قابل بازدید
+    public interface IShoppingItem
+    {
+        void Accept(IVisitor visitor);
+    }
 
-class Book(ShoppingItem):
-    def __init__(self, price: int, isbn: str):
-        self.price = price
-        self.isbn = isbn
-    
-    def accept(self, visitor: Visitor):
-        visitor.visit_book(self)
+    // Concrete Element - کتاب
+    public class Book : IShoppingItem
+    {
+        public int Price { get; set; }
+        public string ISBN { get; set; }
 
-class Fruit(ShoppingItem):
-    def __init__(self, price_per_kg: int, weight: float):
-        self.price_per_kg = price_per_kg
-        self.weight = weight
-    
-    def accept(self, visitor: Visitor):
-        visitor.visit_fruit(self)
+        public Book(int price, string isbn)
+        {
+            Price = price;
+            ISBN = isbn;
+        }
 
-class PriceCalculator(Visitor):
-    def __init__(self):
-        self.total = 0
-    
-    def visit_book(self, book):
-        cost = book.price
-        self.total += cost
-        print(f"📚 کتاب: {cost:,} تومان")
-    
-    def visit_fruit(self, fruit):
-        cost = fruit.price_per_kg * fruit.weight
-        self.total += cost
-        print(f"🍎 میوه: {cost:,.0f} تومان ({fruit.weight} کیلو)")
+        public void Accept(IVisitor visitor)
+        {
+            visitor.VisitBook(this);
+        }
+    }
 
-# استفاده
-items = [
-    Book(50000, "123-456"),
-    Fruit(20000, 2.5),
-    Book(30000, "789-012")
-]
+    // Concrete Element - میوه
+    public class Fruit : IShoppingItem
+    {
+        public int PricePerKg { get; set; }
+        public double Weight { get; set; }
 
-calculator = PriceCalculator()
-for item in items:
-    item.accept(calculator)
+        public Fruit(int pricePerKg, double weight)
+        {
+            PricePerKg = pricePerKg;
+            Weight = weight;
+        }
 
-print(f"\n💰 مجموع: {calculator.total:,.0f} تومان")
+        public void Accept(IVisitor visitor)
+        {
+            visitor.VisitFruit(this);
+        }
+    }
+
+    // Concrete Visitor - محاسبه‌گر قیمت
+    public class PriceCalculator : IVisitor
+    {
+        public double Total { get; private set; }
+
+        public PriceCalculator()
+        {
+            Total = 0;
+        }
+
+        public void VisitBook(Book book)
+        {
+            int cost = book.Price;
+            Total += cost;
+            Console.WriteLine($"📚 کتاب (ISBN: {book.ISBN}): {cost:N0} تومان");
+        }
+
+        public void VisitFruit(Fruit fruit)
+        {
+            double cost = fruit.PricePerKg * fruit.Weight;
+            Total += cost;
+            Console.WriteLine($"🍎 میوه: {cost:N0} تومان ({fruit.Weight} کیلو)");
+        }
+    }
+
+    // برنامه اصلی
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            Console.WriteLine("👤 الگوی Visitor - محاسبه قیمت خرید\n");
+            Console.WriteLine(new string('=', 60));
+
+            // ایجاد لیست خرید
+            List<IShoppingItem> items = new List<IShoppingItem>
+            {
+                new Book(50000, "123-456"),
+                new Fruit(20000, 2.5),
+                new Book(30000, "789-012")
+            };
+
+            // ایجاد بازدیدکننده محاسبه قیمت
+            PriceCalculator calculator = new PriceCalculator();
+
+            Console.WriteLine("\n🛒 اقلام خرید:");
+            Console.WriteLine(new string('-', 60));
+
+            // بازدید از تمام اقلام
+            foreach (var item in items)
+            {
+                item.Accept(calculator);
+            }
+
+            Console.WriteLine(new string('-', 60));
+            Console.WriteLine($"\n💰 مجموع: {calculator.Total:N0} تومان");
+            Console.WriteLine(new string('=', 60));
+        }
+    }
+}
+```
+
+### 📤 خروجی برنامه:
+```
+👤 الگوی Visitor - محاسبه قیمت خرید
+
+============================================================
+
+🛒 اقلام خرید:
+------------------------------------------------------------
+📚 کتاب (ISBN: 123-456): 50,000 تومان
+🍎 میوه: 50,000 تومان (2.5 کیلو)
+📚 کتاب (ISBN: 789-012): 30,000 تومان
+------------------------------------------------------------
+
+💰 مجموع: 130,000 تومان
+============================================================
 ```
 
 ## 🔍 چه زمانی استفاده کنیم؟

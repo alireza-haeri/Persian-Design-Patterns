@@ -3,56 +3,121 @@
 ## 🎯 هدف
 الگوی Template Method یک الگوی طراحی رفتاری است که اسکلت یک الگوریتم را در کلاس پایه تعریف می‌کند اما به زیرکلاس‌ها اجازه می‌دهد مراحل خاصی از الگوریتم را بدون تغییر ساختار آن بازنویسی کنند.
 
-## 💻 مثال کد (Python)
+## 💻 مثال کد (C#)
 
-```python
-from abc import ABC, abstractmethod
+```csharp
+using System;
 
-class Beverage(ABC):
-    def prepare(self):
-        """Template Method"""
-        self.boil_water()
-        self.brew()
-        self.pour_in_cup()
-        self.add_condiments()
-        print("✅ نوشیدنی آماده است!\n")
-    
-    def boil_water(self):
-        print("💧 جوشاندن آب")
-    
-    def pour_in_cup(self):
-        print("☕ ریختن در فنجان")
-    
-    @abstractmethod
-    def brew(self):
-        pass
-    
-    @abstractmethod
-    def add_condiments(self):
-        pass
+namespace TemplateMethodPattern
+{
+    // کلاس انتزاعی نوشیدنی - Template Method در اینجا قرار دارد
+    public abstract class Beverage
+    {
+        // Template Method - مراحل الگوریتم را تعریف می‌کند
+        public void Prepare()
+        {
+            BoilWater();
+            Brew();
+            PourInCup();
+            AddCondiments();
+            Console.WriteLine("✅ نوشیدنی آماده است!\n");
+        }
 
-class Tea(Beverage):
-    def brew(self):
-        print("🍵 دم کردن چای")
-    
-    def add_condiments(self):
-        print("🍋 اضافه کردن لیمو")
+        // متدهای مشترک که توسط کلاس پایه پیاده‌سازی شده‌اند
+        private void BoilWater()
+        {
+            Console.WriteLine("💧 جوشاندن آب");
+        }
 
-class Coffee(Beverage):
-    def brew(self):
-        print("☕ دم کردن قهوه")
-    
-    def add_condiments(self):
-        print("🥛 اضافه کردن شیر و شکر")
+        private void PourInCup()
+        {
+            Console.WriteLine("☕ ریختن در فنجان");
+        }
 
-# استفاده
-print("آماده‌سازی چای:")
-tea = Tea()
-tea.prepare()
+        // متدهای انتزاعی که باید توسط زیرکلاس‌ها پیاده‌سازی شوند
+        protected abstract void Brew();
+        protected abstract void AddCondiments();
+    }
 
-print("آماده‌سازی قهوه:")
-coffee = Coffee()
-coffee.prepare()
+    // کلاس چای - پیاده‌سازی مشخص برای چای
+    public class Tea : Beverage
+    {
+        protected override void Brew()
+        {
+            Console.WriteLine("🍵 دم کردن چای");
+        }
+
+        protected override void AddCondiments()
+        {
+            Console.WriteLine("🍋 اضافه کردن لیمو");
+        }
+    }
+
+    // کلاس قهوه - پیاده‌سازی مشخص برای قهوه
+    public class Coffee : Beverage
+    {
+        protected override void Brew()
+        {
+            Console.WriteLine("☕ دم کردن قهوه");
+        }
+
+        protected override void AddCondiments()
+        {
+            Console.WriteLine("🥛 اضافه کردن شیر و شکر");
+        }
+    }
+
+    // برنامه اصلی
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            Console.WriteLine("📋 الگوی Template Method - آماده‌سازی نوشیدنی\n");
+            Console.WriteLine(new string('=', 60));
+
+            // آماده‌سازی چای
+            Console.WriteLine("\nآماده‌سازی چای:");
+            Console.WriteLine(new string('-', 60));
+            Beverage tea = new Tea();
+            tea.Prepare();
+
+            // آماده‌سازی قهوه
+            Console.WriteLine("آماده‌سازی قهوه:");
+            Console.WriteLine(new string('-', 60));
+            Beverage coffee = new Coffee();
+            coffee.Prepare();
+
+            Console.WriteLine(new string('=', 60));
+        }
+    }
+}
+```
+
+### 📤 خروجی برنامه:
+```
+📋 الگوی Template Method - آماده‌سازی نوشیدنی
+
+============================================================
+
+آماده‌سازی چای:
+------------------------------------------------------------
+💧 جوشاندن آب
+🍵 دم کردن چای
+☕ ریختن در فنجان
+🍋 اضافه کردن لیمو
+✅ نوشیدنی آماده است!
+
+آماده‌سازی قهوه:
+------------------------------------------------------------
+💧 جوشاندن آب
+☕ دم کردن قهوه
+☕ ریختن در فنجان
+🥛 اضافه کردن شیر و شکر
+✅ نوشیدنی آماده است!
+
+============================================================
 ```
 
 ## 🔍 چه زمانی استفاده کنیم؟
