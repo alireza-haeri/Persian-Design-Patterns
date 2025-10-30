@@ -10,8 +10,9 @@
 
 تصور کنید در حال توسعه یک سیستم **مدیریت لجستیک** هستید. نسخه اولیه شما فقط **حمل‌ونقل جاده‌ای** (با کامیون) را پشتیبانی می‌کند، بنابراین بیشتر کدهای شما در کلاس `Truck` قرار دارد.
 
+کد اولیه - فقط کامیون:
 ```csharp
-// کد اولیه - فقط کامیون!
+
 public class LogisticsApp
 {
     public void PlanDelivery()
@@ -27,8 +28,11 @@ public class LogisticsApp
 ### مشکلات رویکرد سنتی:
 
 **1. وابستگی مستقیم به کلاس‌های مشخص**
+
+مجبوریم در همه جا if-else بنویسیم:
 ```csharp
-// مجبوریم در همه جا if-else بنویسیم
+
+
 public void PlanDelivery(string type)
 {
     if (type == "road")
@@ -67,8 +71,10 @@ public void PlanDelivery(string type)
 2. **متد کارخانه**: یک متد abstract برای ساخت وسیله نقلیه
 3. **زیرکلاس‌ها**: هر نوع لجستیک، متد کارخانه را override می‌کند
 
+
+با Factory Method - تمیز و انعطاف‌پذیر:
 ```csharp
-// با Factory Method - تمیز و انعطاف‌پذیر! ✨
+
 public abstract class Logistics
 {
     // Factory Method - زیرکلاس‌ها تصمیم می‌گیرند چه چیزی بسازند
@@ -99,91 +105,7 @@ public class SeaLogistics : Logistics
 - ✅ تست‌پذیری بالا
 - ✅ انعطاف‌پذیری کامل
 
-## 📊 ساختار
-
-```mermaid
-classDiagram
-    class ITransport {
-        <<interface>> 🚀
-        +Deliver() string
-    }
-    
-    class Truck {
-        +Deliver() string 🚚
-    }
-    
-    class Ship {
-        +Deliver() string 🚢
-    }
-    
-    class Plane {
-        +Deliver() string ✈️
-    }
-    
-    class Logistics {
-        <<abstract>> 🏭
-        +CreateTransport()* ITransport
-        +PlanDelivery() string
-    }
-    
-    class RoadLogistics {
-        +CreateTransport() ITransport 🛣️
-    }
-    
-    class SeaLogistics {
-        +CreateTransport() ITransport 🌊
-    }
-    
-    class AirLogistics {
-        +CreateTransport() ITransport ☁️
-    }
-    
-    ITransport <|.. Truck : پیاده‌سازی
-    ITransport <|.. Ship : پیاده‌سازی
-    ITransport <|.. Plane : پیاده‌سازی
-    
-    Logistics <|-- RoadLogistics : ارث‌بری
-    Logistics <|-- SeaLogistics : ارث‌بری
-    Logistics <|-- AirLogistics : ارث‌بری
-    
-    Logistics ..> ITransport : می‌سازد
-    RoadLogistics ..> Truck : تولید می‌کند
-    SeaLogistics ..> Ship : تولید می‌کند
-    AirLogistics ..> Plane : تولید می‌کند
-    
-    note for Logistics "کلاس Creator<br/>Factory Method را<br/>تعریف می‌کند"
-    note for ITransport "Product Interface<br/>قرارداد مشترک<br/>همه محصولات"
-```
-
-## 👥 اجزای الگو
-
-| جزء | نقش | مثال |
-|-----|-----|------|
-| **Product** | رابط/کلاس پایه محصولات | `ITransport` |
-| **Concrete Product** | پیاده‌سازی واقعی محصول | `Truck`, `Ship`, `Plane` |
-| **Creator** | کلاس سازنده با Factory Method | `Logistics` |
-| **Concrete Creator** | پیاده‌سازی Factory Method | `RoadLogistics`, `SeaLogistics` |
-
-### نقش هر جزء:
-
-1. **Product (ITransport)**: 
-   - رابط مشترک برای تمام محصولاتی که factory method ایجاد می‌کند
-   - قراردادی که همه محصولات باید رعایت کنند
-
-2. **Concrete Products (Truck, Ship, Plane)**: 
-   - پیاده‌سازی‌های مختلف رابط Product
-   - محصولات واقعی که کارخانه تولید می‌کند
-
-3. **Creator (Logistics)**: 
-   - کلاسی که Factory Method را اعلام می‌کند
-   - شامل منطق کسب‌وکار است که از محصولات استفاده می‌کند
-   - ممکن است پیاده‌سازی پیش‌فرض برای Factory Method داشته باشد
-
-4. **Concrete Creators (RoadLogistics, SeaLogistics)**: 
-   - Factory Method را override می‌کنند
-   - نوع محصول خاصی را برمی‌گردانند
-
-## 💻 پیاده‌سازی با C#
+ 💻 پیاده‌سازی با C#
 
 ```csharp
 using System;
@@ -308,110 +230,6 @@ namespace FactoryMethodPattern
 --------------------------------------------------
 ```
 
-## 🎯 مثال کاربردی: سیستم گزارش‌گیری
-
-```csharp
-// Product Interface
-public interface IReport
-{
-    string Generate();
-}
-
-// Concrete Products
-public class PdfReport : IReport
-{
-    public string Generate() => "📄 گزارش PDF تولید شد";
-}
-
-public class ExcelReport : IReport
-{
-    public string Generate() => "📊 گزارش Excel تولید شد";
-}
-
-public class HtmlReport : IReport
-{
-    public string Generate() => "🌐 گزارش HTML تولید شد";
-}
-
-// Creator
-public abstract class ReportGenerator
-{
-    public abstract IReport CreateReport();
-
-    public string ExportReport()
-    {
-        var report = CreateReport();
-        return $"🔄 در حال صادرکردن...\n{report.Generate()}";
-    }
-}
-
-// Concrete Creators
-public class PdfReportGenerator : ReportGenerator
-{
-    public override IReport CreateReport() => new PdfReport();
-}
-
-public class ExcelReportGenerator : ReportGenerator
-{
-    public override IReport CreateReport() => new ExcelReport();
-}
-
-public class HtmlReportGenerator : ReportGenerator
-{
-    public override IReport CreateReport() => new HtmlReport();
-}
-
-// استفاده
-var pdfGen = new PdfReportGenerator();
-Console.WriteLine(pdfGen.ExportReport());
-// 🔄 در حال صادرکردن...
-// 📄 گزارش PDF تولید شد
-```
-
-## 🎯 مثال کاربردی: سیستم پرداخت
-
-```csharp
-public interface IPaymentMethod
-{
-    string ProcessPayment(decimal amount);
-}
-
-public class CreditCardPayment : IPaymentMethod
-{
-    public string ProcessPayment(decimal amount)
-        => $"💳 پرداخت {amount:N0} تومان با کارت اعتباری انجام شد";
-}
-
-public class PayPalPayment : IPaymentMethod
-{
-    public string ProcessPayment(decimal amount)
-        => $"🌐 پرداخت {amount:N0} تومان با PayPal انجام شد";
-}
-
-public class CryptoPayment : IPaymentMethod
-{
-    public string ProcessPayment(decimal amount)
-        => $"₿ پرداخت {amount:N0} تومان با ارز دیجیتال انجام شد";
-}
-
-public abstract class PaymentProcessor
-{
-    public abstract IPaymentMethod CreatePaymentMethod();
-
-    public string Pay(decimal amount)
-    {
-        var method = CreatePaymentMethod();
-        return method.ProcessPayment(amount);
-    }
-}
-
-public class CreditCardProcessor : PaymentProcessor
-{
-    public override IPaymentMethod CreatePaymentMethod()
-        => new CreditCardPayment();
-}
-```
-
 ## ⚖️ مزایا و معایب
 
 ### مزایا ✅
@@ -464,18 +282,18 @@ public class CreditCardProcessor : PaymentProcessor
 
 ### 1. نامگذاری واضح
 ```csharp
-// ✅ خوب - نام واضح
+// ✅
 public abstract ITransport CreateTransport();
 public abstract IDocument CreateDocument();
 
-// ❌ بد - نام مبهم
+// ❌ 
 public abstract ITransport Get();
 public abstract IDocument Make();
 ```
 
 ### 2. پیاده‌سازی پیش‌فرض
 ```csharp
-// می‌توانید پیاده‌سازی پیش‌فرض داشته باشید
+
 public abstract class Logistics
 {
     public virtual ITransport CreateTransport()
@@ -500,8 +318,10 @@ public abstract class Creator<T> where T : IProduct
 ```
 
 ### 4. ترکیب با Dependency Injection
-```csharp
+
 // در ASP.NET Core
+```csharp
+
 services.AddScoped<ITransportFactory, TruckFactory>();
 ```
 
@@ -518,44 +338,7 @@ public class CachedFactory : Creator
 }
 ```
 
-## 🆚 مقایسه با الگوهای مشابه
 
-| ویژگی | Factory Method | Abstract Factory | Builder | Prototype |
-|-------|---------------|------------------|---------|-----------|
-| هدف | ساخت **یک** محصول | ساخت **خانواده** محصولات | ساخت **گام‌به‌گام** | ساخت با **کپی** |
-| پیچیدگی | متوسط | بالا | متوسط | پایین |
-| تعداد محصول | یکی | چندتا | یکی | یکی |
-| وراثت | بله | بله | خیر | خیر |
-| استفاده | محصولات **مشابه** | محصولات **وابسته** | محصولات **پیچیده** | **Clone** موجود |
-
-## 📚 ارتباط با الگوهای دیگر
-
-```mermaid
-graph TD
-    A[Factory Method] 
-    B[Abstract Factory]
-    C[Template Method]
-    D[Prototype]
-    E[Strategy]
-    
-    A -->|گسترش یافته| B
-    A -->|مشابه| C
-    A -->|جایگزین| D
-    A -->|ترکیب| E
-    
-    B -.->|از Factory Method<br/>استفاده می‌کند| A
-    C -.->|Factory Method نوعی<br/>Template Method است| A
-    D -.->|بدون وراثت| A
-    E -.->|برای انتخاب Factory| A
-```
-
-### روابط:
-
-- **Abstract Factory**: اغلب با Factory Method پیاده‌سازی می‌شود
-- **Template Method**: Factory Method حالت خاصی از Template Method است
-- **Prototype**: جایگزین Factory Method برای جلوگیری از سلسله‌مراتب پیچیده
-- **Strategy**: می‌تواند برای انتخاب Factory Method مناسب استفاده شود
-- **Singleton**: محصولات ساخته‌شده می‌توانند Singleton باشند
 
 ## 🔑 نکات کلیدی
 
@@ -579,72 +362,12 @@ graph TD
 > }
 > ```
 
-## 🎓 سناریوهای واقعی
-
-### مثال 1: سیستم Notification
-
-```csharp
-// استفاده در سیستم اعلان‌رسانی
-public abstract class NotificationService
-{
-    public abstract INotification CreateNotification();
-    
-    public void Send(string message)
-    {
-        var notification = CreateNotification();
-        notification.Send(message);
-    }
-}
-
-public class EmailNotificationService : NotificationService
-{
-    public override INotification CreateNotification() 
-        => new EmailNotification();
-}
-
-public class SmsNotificationService : NotificationService
-{
-    public override INotification CreateNotification() 
-        => new SmsNotification();
-}
-
-public class PushNotificationService : NotificationService
-{
-    public override INotification CreateNotification() 
-        => new PushNotification();
-}
-```
-
-### مثال 2: Data Export System
-
-```csharp
-public abstract class DataExporter
-{
-    public abstract IExportFormat CreateFormat();
-    
-    public void Export(Data data, string filename)
-    {
-        var format = CreateFormat();
-        format.Export(data, filename);
-        Console.WriteLine($"✅ داده با فرمت {format.GetType().Name} صادر شد");
-    }
-}
-
-public class PdfExporter : DataExporter
-{
-    public override IExportFormat CreateFormat() => new PdfFormat();
-}
-
-public class CsvExporter : DataExporter
-{
-    public override IExportFormat CreateFormat() => new CsvFormat();
-}
-```
 
 ## ⚠️ اشتباهات رایج
 
 ### 1. استفاده بیش از حد
 ```csharp
+// Example
 // ❌ بد - برای یک کلاس ساده نیازی به Factory Method نیست
 public abstract class SimpleObjectFactory
 {
@@ -657,6 +380,7 @@ var obj = new SimpleObject();
 
 ### 2. نقض اصل Liskov Substitution
 ```csharp
+// Example
 // ❌ بد - زیرکلاس نوع متفاوتی برمی‌گرداند
 public class BadCreator : Creator
 {
@@ -669,6 +393,7 @@ public class BadCreator : Creator
 
 ### 3. وابستگی به پیاده‌سازی خاص
 ```csharp
+// Example
 // ❌ بد - استفاده از کلاس مشخص
 public void Process()
 {
