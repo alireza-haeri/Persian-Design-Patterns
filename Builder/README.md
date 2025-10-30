@@ -62,60 +62,6 @@ computer.RAM = "32GB";
 3. **خوانایی بالا**: کد واضح و قابل فهم است
 4. **انعطاف‌پذیری**: می‌توانید Builder های مختلف برای ساخت‌های مختلف داشته باشید
 
-## 📊 ساختار
-
-```mermaid
-classDiagram
-    class Computer {
-        +string CPU 🖥️
-        +string RAM 💾
-        +string Storage 💿
-        +string GPU 🎮
-        +Display() 📋
-    }
-    
-    class IComputerBuilder {
-        <<interface>>
-        +SetCPU(cpu) 🔧
-        +SetRAM(ram) 🔧
-        +SetStorage(storage) 🔧
-        +SetGPU(gpu) 🔧
-        +Build() Computer ✨
-    }
-    
-    class GamingComputerBuilder {
-        -Computer computer
-        +SetCPU(cpu) 🎮
-        +SetRAM(ram) 🎮
-        +SetStorage(storage) 🎮
-        +SetGPU(gpu) 🎮
-        +Build() Computer ✅
-    }
-    
-    class OfficeComputerBuilder {
-        -Computer computer
-        +SetCPU(cpu) 💼
-        +SetRAM(ram) 💼
-        +SetStorage(storage) 💼
-        +SetGPU(gpu) 💼
-        +Build() Computer ✅
-    }
-    
-    class Director {
-        -IComputerBuilder builder
-        +ConstructGamingPC() 🎮
-        +ConstructOfficePC() 💼
-    }
-    
-    IComputerBuilder <|.. GamingComputerBuilder
-    IComputerBuilder <|.. OfficeComputerBuilder
-    Director o-- IComputerBuilder
-    GamingComputerBuilder ..> Computer : می‌سازد
-    OfficeComputerBuilder ..> Computer : می‌سازد
-    
-    note for Computer "محصول نهایی"
-    note for Director "اختیاری: مراحل ساخت را هماهنگ می‌کند"
-```
 
 ## 💻 پیاده‌سازی با C#
 
@@ -385,16 +331,6 @@ email.Send();
    ```
 4. **Reset Method**: اگر می‌خواهید Builder را دوباره استفاده کنید، یک متد Reset اضافه کنید
 5. **Required vs Optional**: برای فیلدهای اجباری، می‌توانید آن‌ها را در سازنده Builder بگذارید
-
-## 🆚 Builder vs Factory
-
-| ویژگی | Builder | Factory |
-|-------|---------|---------|
-| تمرکز | ساخت **گام به گام** | ساخت **یک‌جا** |
-| پیچیدگی | اشیاء **پیچیده** | اشیاء **ساده** |
-| کنترل | کنترل **کامل** روی مراحل | کنترل **محدود** |
-| تنوع | Builder های **متعدد** | Factory های **متعدد** |
-| استفاده | ساخت **یک** شیء | ساخت **خانواده** اشیاء |
 
 ## 🔑 نکته کلیدی
 
