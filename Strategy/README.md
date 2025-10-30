@@ -107,7 +107,7 @@ class Program
 
         // تغییر استراتژی در زمان اجرا
         cart.SetPaymentStrategy(new CreditCardStrategy("1234-5678-9012-3456"));
-        cart.checkout();
+        cart.Checkout();
 
         // تغییر به استراتژی دیگر
         cart.SetPaymentStrategy(new PayPalStrategy("user@example.com"));
