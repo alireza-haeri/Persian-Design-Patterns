@@ -56,178 +56,367 @@
 - برخی درخواست‌ها ممکن است بدون پردازش بمانند
 - دیباگ زنجیره می‌تواند سخت باشد
 
-## 💻 مثال کد (Python)
+## 💻 مثال کد (C#)
 
-```python
-from abc import ABC, abstractmethod
-from typing import Optional
+```csharp
+using System;
+using System.Collections.Generic;
 
-# Handler Interface
-class Handler(ABC):
-    def __init__(self):
-        self._next_handler: Optional[Handler] = None
-    
-    def set_next(self, handler: 'Handler') -> 'Handler':
-        self._next_handler = handler
-        return handler
-    
-    @abstractmethod
-    def handle(self, request: dict) -> Optional[str]:
-        if self._next_handler:
-            return self._next_handler.handle(request)
-        return None
+namespace ChainOfResponsibilityPattern
+{
+    // کلاس درخواست برای نگهداری اطلاعات درخواست
+    public class Request
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Role { get; set; }
+        public bool AdminRequired { get; set; }
+        public string Data { get; set; }
 
-# Concrete Handlers
-class AuthenticationHandler(Handler):
-    def handle(self, request: dict) -> Optional[str]:
-        if not request.get('username') or not request.get('password'):
-            return "❌ خطای احراز هویت: نام کاربری یا رمز عبور وارد نشده"
-        
-        if request.get('password') != 'secret123':
-            return "❌ خطای احراز هویت: رمز عبور اشتباه است"
-        
-        print("✅ احراز هویت موفق")
-        return super().handle(request)
-
-class AuthorizationHandler(Handler):
-    def handle(self, request: dict) -> Optional[str]:
-        user_role = request.get('role', 'user')
-        
-        if request.get('admin_required', False) and user_role != 'admin':
-            return "❌ خطای مجوز: نیاز به دسترسی ادمین"
-        
-        print("✅ مجوز تأیید شد")
-        return super().handle(request)
-
-class ValidationHandler(Handler):
-    def handle(self, request: dict) -> Optional[str]:
-        if not request.get('data'):
-            return "❌ خطای اعتبارسنجی: داده خالی است"
-        
-        if len(request.get('data', '')) < 5:
-            return "❌ خطای اعتبارسنجی: داده باید حداقل 5 کاراکتر باشد"
-        
-        print("✅ اعتبارسنجی موفق")
-        return super().handle(request)
-
-class ProcessHandler(Handler):
-    def handle(self, request: dict) -> Optional[str]:
-        print(f"✅ پردازش درخواست: {request.get('data')}")
-        return "درخواست با موفقیت پردازش شد! 🎉"
-
-# استفاده
-if __name__ == "__main__":
-    print("🔗 الگوی Chain of Responsibility\n")
-    print("=" * 60)
-    
-    # ساخت زنجیره
-    auth = AuthenticationHandler()
-    authz = AuthorizationHandler()
-    validation = ValidationHandler()
-    process = ProcessHandler()
-    
-    auth.set_next(authz).set_next(validation).set_next(process)
-    
-    # تست 1: درخواست معتبر
-    print("\n📤 تست 1: درخواست معتبر")
-    print("-" * 60)
-    request1 = {
-        'username': 'ali',
-        'password': 'secret123',
-        'role': 'user',
-        'data': 'سفارش محصول'
+        public Request()
+        {
+            Role = "user"; // مقدار پیش‌فرض
+            AdminRequired = false;
+        }
     }
-    result = auth.handle(request1)
-    print(f"📥 نتیجه: {result}")
-    
-    # تست 2: رمز عبور اشتباه
-    print("\n\n📤 تست 2: رمز عبور اشتباه")
-    print("-" * 60)
-    request2 = {
-        'username': 'reza',
-        'password': 'wrong',
-        'data': 'سفارش محصول'
+
+    // رابط Handler - تعریف رابط مشترک برای تمام دست‌گیرنده‌ها
+    public abstract class Handler
+    {
+        // نگهداری مرجع به handler بعدی در زنجیره
+        protected Handler _nextHandler;
+
+        // تنظیم handler بعدی و بازگشت آن برای ایجاد زنجیره روان
+        public Handler SetNext(Handler handler)
+        {
+            _nextHandler = handler;
+            return handler;
+        }
+
+        // متد انتزاعی برای پردازش درخواست
+        public abstract string Handle(Request request);
     }
-    result = auth.handle(request2)
-    print(f"📥 نتیجه: {result}")
-    
-    # تست 3: نیاز به دسترسی ادمین
-    print("\n\n📤 تست 3: نیاز به دسترسی ادمین")
-    print("-" * 60)
-    request3 = {
-        'username': 'sara',
-        'password': 'secret123',
-        'role': 'user',
-        'admin_required': True,
-        'data': 'حذف کاربر'
+
+    // Handler احراز هویت - بررسی اعتبار کاربری
+    public class AuthenticationHandler : Handler
+    {
+        public override string Handle(Request request)
+        {
+            // بررسی وجود نام کاربری و رمز عبور
+            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+            {
+                return "❌ خطای احراز هویت: نام کاربری یا رمز عبور وارد نشده";
+            }
+
+            // بررسی صحت رمز عبور
+            if (request.Password != "secret123")
+            {
+                return "❌ خطای احراز هویت: رمز عبور اشتباه است";
+            }
+
+            Console.WriteLine("✅ احراز هویت موفق");
+
+            // انتقال درخواست به handler بعدی در زنجیره
+            if (_nextHandler != null)
+            {
+                return _nextHandler.Handle(request);
+            }
+
+            return null;
+        }
     }
-    result = auth.handle(request3)
-    print(f"📥 نتیجه: {result}")
-    
-    # تست 4: داده نامعتبر
-    print("\n\n📤 تست 4: داده نامعتبر")
-    print("-" * 60)
-    request4 = {
-        'username': 'mehdi',
-        'password': 'secret123',
-        'role': 'user',
-        'data': 'کم'
+
+    // Handler مجوزدهی - بررسی سطح دسترسی کاربر
+    public class AuthorizationHandler : Handler
+    {
+        public override string Handle(Request request)
+        {
+            // بررسی نیاز به دسترسی ادمین
+            if (request.AdminRequired && request.Role != "admin")
+            {
+                return "❌ خطای مجوز: نیاز به دسترسی ادمین";
+            }
+
+            Console.WriteLine("✅ مجوز تأیید شد");
+
+            // انتقال درخواست به handler بعدی
+            if (_nextHandler != null)
+            {
+                return _nextHandler.Handle(request);
+            }
+
+            return null;
+        }
     }
-    result = auth.handle(request4)
-    print(f"📥 نتیجه: {result}")
+
+    // Handler اعتبارسنجی - بررسی صحت داده‌ها
+    public class ValidationHandler : Handler
+    {
+        public override string Handle(Request request)
+        {
+            // بررسی خالی نبودن داده
+            if (string.IsNullOrEmpty(request.Data))
+            {
+                return "❌ خطای اعتبارسنجی: داده خالی است";
+            }
+
+            // بررسی طول داده
+            if (request.Data.Length < 5)
+            {
+                return "❌ خطای اعتبارسنجی: داده باید حداقل 5 کاراکتر باشد";
+            }
+
+            Console.WriteLine("✅ اعتبارسنجی موفق");
+
+            // انتقال درخواست به handler بعدی
+            if (_nextHandler != null)
+            {
+                return _nextHandler.Handle(request);
+            }
+
+            return null;
+        }
+    }
+
+    // Handler پردازش نهایی - پردازش درخواست معتبر
+    public class ProcessHandler : Handler
+    {
+        public override string Handle(Request request)
+        {
+            Console.WriteLine($"✅ پردازش درخواست: {request.Data}");
+            return "درخواست با موفقیت پردازش شد! 🎉";
+        }
+    }
+
+    // برنامه اصلی
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // تنظیم کدگذاری برای نمایش صحیح فارسی
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            Console.WriteLine("🔗 الگوی Chain of Responsibility\n");
+            Console.WriteLine("============================================================");
+
+            // ساخت زنجیره مسئولیت
+            var auth = new AuthenticationHandler();
+            var authz = new AuthorizationHandler();
+            var validation = new ValidationHandler();
+            var process = new ProcessHandler();
+
+            // اتصال handler ها به یکدیگر برای ایجاد زنجیره
+            auth.SetNext(authz).SetNext(validation).SetNext(process);
+
+            // تست 1: درخواست معتبر
+            Console.WriteLine("\n📤 تست 1: درخواست معتبر");
+            Console.WriteLine("------------------------------------------------------------");
+            var request1 = new Request
+            {
+                Username = "ali",
+                Password = "secret123",
+                Role = "user",
+                Data = "سفارش محصول"
+            };
+            string result = auth.Handle(request1);
+            Console.WriteLine($"📥 نتیجه: {result}");
+
+            // تست 2: رمز عبور اشتباه
+            Console.WriteLine("\n\n📤 تست 2: رمز عبور اشتباه");
+            Console.WriteLine("------------------------------------------------------------");
+            var request2 = new Request
+            {
+                Username = "reza",
+                Password = "wrong",
+                Data = "سفارش محصول"
+            };
+            result = auth.Handle(request2);
+            Console.WriteLine($"📥 نتیجه: {result}");
+
+            // تست 3: نیاز به دسترسی ادمین
+            Console.WriteLine("\n\n📤 تست 3: نیاز به دسترسی ادمین");
+            Console.WriteLine("------------------------------------------------------------");
+            var request3 = new Request
+            {
+                Username = "sara",
+                Password = "secret123",
+                Role = "user",
+                AdminRequired = true,
+                Data = "حذف کاربر"
+            };
+            result = auth.Handle(request3);
+            Console.WriteLine($"📥 نتیجه: {result}");
+
+            // تست 4: داده نامعتبر
+            Console.WriteLine("\n\n📤 تست 4: داده نامعتبر");
+            Console.WriteLine("------------------------------------------------------------");
+            var request4 = new Request
+            {
+                Username = "mehdi",
+                Password = "secret123",
+                Role = "user",
+                Data = "کم"
+            };
+            result = auth.Handle(request4);
+            Console.WriteLine($"📥 نتیجه: {result}");
+
+            Console.WriteLine("\n\nبرای خروج کلیدی را فشار دهید...");
+            Console.ReadKey();
+        }
+    }
+}
+```
+
+### 📤 خروجی برنامه:
+```
+🔗 الگوی Chain of Responsibility
+
+============================================================
+
+📤 تست 1: درخواست معتبر
+------------------------------------------------------------
+✅ احراز هویت موفق
+✅ مجوز تأیید شد
+✅ اعتبارسنجی موفق
+✅ پردازش درخواست: سفارش محصول
+📥 نتیجه: درخواست با موفقیت پردازش شد! 🎉
+
+
+📤 تست 2: رمز عبور اشتباه
+------------------------------------------------------------
+📥 نتیجه: ❌ خطای احراز هویت: رمز عبور اشتباه است
+
+
+📤 تست 3: نیاز به دسترسی ادمین
+------------------------------------------------------------
+✅ احراز هویت موفق
+📥 نتیجه: ❌ خطای مجوز: نیاز به دسترسی ادمین
+
+
+📤 تست 4: داده نامعتبر
+------------------------------------------------------------
+✅ احراز هویت موفق
+✅ مجوز تأیید شد
+📥 نتیجه: ❌ خطای اعتبارسنجی: داده باید حداقل 5 کاراکتر باشد
+
+برای خروج کلیدی را فشار دهید...
 ```
 
 ## 🎯 مثال کاربردی واقعی
 
 ### مثال 1: سیستم پشتیبانی مشتری
-```python
-class SupportHandler(Handler):
-    pass
+```csharp
+// کلاس درخواست پشتیبانی
+public class SupportRequest
+{
+    public string Priority { get; set; }  // low, medium, high
+    public string Issue { get; set; }
+}
 
-class Level1Support(SupportHandler):
-    def handle(self, request: dict) -> Optional[str]:
-        if request.get('priority') == 'low':
-            return f"✅ پشتیبانی سطح 1: {request.get('issue')} حل شد"
-        print("🔄 انتقال به سطح 2...")
-        return super().handle(request)
+// کلاس پایه برای پشتیبانی
+public abstract class SupportHandler : Handler
+{
+    public abstract string Handle(SupportRequest request);
+}
 
-class Level2Support(SupportHandler):
-    def handle(self, request: dict) -> Optional[str]:
-        if request.get('priority') == 'medium':
-            return f"✅ پشتیبانی سطح 2: {request.get('issue')} حل شد"
-        print("🔄 انتقال به مدیر...")
-        return super().handle(request)
+// پشتیبانی سطح 1 - مسائل ساده
+public class Level1Support : Handler
+{
+    public override string Handle(Request request)
+    {
+        var supportRequest = request as SupportRequest;
+        if (supportRequest?.Priority == "low")
+        {
+            return $"✅ پشتیبانی سطح 1: {supportRequest.Issue} حل شد";
+        }
+        
+        Console.WriteLine("🔄 انتقال به سطح 2...");
+        return _nextHandler?.Handle(request);
+    }
+}
 
-class ManagerSupport(SupportHandler):
-    def handle(self, request: dict) -> Optional[str]:
-        return f"✅ مدیر: {request.get('issue')} حل شد (اولویت بالا)"
+// پشتیبانی سطح 2 - مسائل متوسط
+public class Level2Support : Handler
+{
+    public override string Handle(Request request)
+    {
+        var supportRequest = request as SupportRequest;
+        if (supportRequest?.Priority == "medium")
+        {
+            return $"✅ پشتیبانی سطح 2: {supportRequest.Issue} حل شد";
+        }
+        
+        Console.WriteLine("🔄 انتقال به مدیر...");
+        return _nextHandler?.Handle(request);
+    }
+}
+
+// پشتیبانی مدیریتی - مسائل بحرانی
+public class ManagerSupport : Handler
+{
+    public override string Handle(Request request)
+    {
+        var supportRequest = request as SupportRequest;
+        return $"✅ مدیر: {supportRequest.Issue} حل شد (اولویت بالا)";
+    }
+}
 ```
 
 ### مثال 2: سیستم لاگ
-```python
-class Logger(Handler):
-    pass
+```csharp
+// کلاس درخواست لاگ
+public class LogRequest
+{
+    public string Level { get; set; }     // INFO, DEBUG, WARNING, ERROR, CRITICAL
+    public string Message { get; set; }
+}
 
-class ConsoleLogger(Logger):
-    def handle(self, request: dict) -> Optional[str]:
-        level = request.get('level')
-        if level in ['INFO', 'DEBUG']:
-            print(f"📺 Console: {request.get('message')}")
-        return super().handle(request)
+// لاگر کنسول - نمایش پیام‌های INFO و DEBUG
+public class ConsoleLogger : Handler
+{
+    public override string Handle(Request request)
+    {
+        var logRequest = request as LogRequest;
+        if (logRequest != null && 
+            (logRequest.Level == "INFO" || logRequest.Level == "DEBUG"))
+        {
+            Console.WriteLine($"📺 Console: {logRequest.Message}");
+        }
+        
+        return _nextHandler?.Handle(request);
+    }
+}
 
-class FileLogger(Logger):
-    def handle(self, request: dict) -> Optional[str]:
-        level = request.get('level')
-        if level in ['WARNING', 'ERROR']:
-            print(f"📁 File: {request.get('message')}")
-        return super().handle(request)
+// لاگر فایل - ذخیره هشدارها و خطاها
+public class FileLogger : Handler
+{
+    public override string Handle(Request request)
+    {
+        var logRequest = request as LogRequest;
+        if (logRequest != null && 
+            (logRequest.Level == "WARNING" || logRequest.Level == "ERROR"))
+        {
+            Console.WriteLine($"📁 File: {logRequest.Message}");
+        }
+        
+        return _nextHandler?.Handle(request);
+    }
+}
 
-class EmailLogger(Logger):
-    def handle(self, request: dict) -> Optional[str]:
-        level = request.get('level')
-        if level == 'CRITICAL':
-            print(f"📧 Email: {request.get('message')}")
-        return super().handle(request)
+// لاگر ایمیل - ارسال خطاهای بحرانی
+public class EmailLogger : Handler
+{
+    public override string Handle(Request request)
+    {
+        var logRequest = request as LogRequest;
+        if (logRequest != null && logRequest.Level == "CRITICAL")
+        {
+            Console.WriteLine($"📧 Email: {logRequest.Message}");
+        }
+        
+        return _nextHandler?.Handle(request);
+    }
+}
 ```
 
 ## 🔍 چه زمانی استفاده کنیم؟
