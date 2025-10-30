@@ -112,14 +112,9 @@ function createNavigationButtons() {
         </div>
     `;
     
-    // افزودن ناوبری در ابتدا و انتهای محتوا
+    // افزودن ناوبری فقط در پایین محتوا
     const contentDiv = document.getElementById('content');
     if (contentDiv) {
-        // ناوبری در بالا
-        const topNav = document.createElement('div');
-        topNav.innerHTML = navHTML;
-        contentDiv.insertBefore(topNav, contentDiv.firstChild);
-        
         // ناوبری در پایین
         const bottomNav = document.createElement('div');
         bottomNav.innerHTML = navHTML;
