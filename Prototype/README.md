@@ -12,30 +12,6 @@
 
 Prototype فرآیند کلون را به خود اشیاء واگذار می‌کند. رابط مشترکی برای کلون تعریف می‌کنید.
 
-## 📊 ساختار
-
-```mermaid
-classDiagram
-    class IPrototype {
-        <<interface>>
-        +Clone() IPrototype
-    }
-    
-    class ConcretePrototype1 {
-        -field1
-        -field2
-        +Clone() IPrototype
-    }
-    
-    class ConcretePrototype2 {
-        -fieldA
-        -fieldB
-        +Clone() IPrototype
-    }
-    
-    IPrototype <|.. ConcretePrototype1
-    IPrototype <|.. ConcretePrototype2
-```
 
 ## 💻 پیاده‌سازی با C#
 
