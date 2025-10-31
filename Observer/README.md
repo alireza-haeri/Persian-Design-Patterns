@@ -121,37 +121,6 @@ class Program
 - **پیچیدگی**: در سیستم‌های بزرگ، ردیابی جریان داده سخت می‌شود
 - **به‌روزرسانی‌های غیرضروری**: ممکن است Observer هایی که نیازی به اطلاع ندارند هم آپدیت شوند
 
-## 📊 نمودار کلاس
-
-```mermaid
-classDiagram
-    class IObserver {
-        <<interface>>
-        +Update(temperature: float)
-    }
-    
-    class WeatherStation {
-        -List~IObserver~ observers
-        -float temperature
-        +Attach(observer: IObserver)
-        +Detach(observer: IObserver)
-        -Notify()
-        +SetTemperature(temp: float)
-    }
-    
-    class PhoneDisplay {
-        +Update(temperature: float)
-    }
-    
-    class TVDisplay {
-        +Update(temperature: float)
-    }
-    
-    IObserver <|.. PhoneDisplay
-    IObserver <|.. TVDisplay
-    WeatherStation o-- IObserver
-```
-
 ## 🎯 کاربردهای واقعی
 
 1. **سیستم‌های Event Handling**: مدیریت رویدادها در UI
