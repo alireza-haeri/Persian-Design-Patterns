@@ -144,44 +144,6 @@ class Program
 - **پیچیدگی**: ممکن است برای الگوریتم‌های ساده، بیش از حد پیچیده باشد
 - **آگاهی کلاینت**: کلاینت باید از تفاوت‌های بین استراتژی‌ها آگاه باشد
 
-## 📊 نمودار کلاس
-
-```mermaid
-classDiagram
-    class IPaymentStrategy {
-        <<interface>>
-        +Pay(amount: decimal)
-    }
-    
-    class ShoppingCart {
-        -List~items~ items
-        -IPaymentStrategy strategy
-        +AddItem(item, price)
-        +SetPaymentStrategy(strategy)
-        +Checkout()
-    }
-    
-    class CreditCardStrategy {
-        -string cardNumber
-        +Pay(amount: decimal)
-    }
-    
-    class PayPalStrategy {
-        -string email
-        +Pay(amount: decimal)
-    }
-    
-    class CryptoStrategy {
-        -string wallet
-        +Pay(amount: decimal)
-    }
-    
-    IPaymentStrategy <|.. CreditCardStrategy
-    IPaymentStrategy <|.. PayPalStrategy
-    IPaymentStrategy <|.. CryptoStrategy
-    ShoppingCart --> IPaymentStrategy
-```
-
 ## 🎯 کاربردهای واقعی
 
 1. **سیستم‌های پرداخت**: انتخاب روش پرداخت مختلف
