@@ -13,42 +13,6 @@
 
 به عنوان نتیجه، تعداد کمتری از این اشیاء نیاز دارید زیرا آن‌ها فقط در حالت intrinsic متفاوت هستند که نسبت به extrinsic تنوع بسیار کمتری دارد.
 
-## 🏗️ ساختار
-
-```
-   ┌──────────────┐
-   │FlyweightFactory│
-   ├──────────────┤
-   │- flyweights  │
-   │+ getFlyweight()│
-   └──────────────┘
-          │
-          │ creates & manages
-          ↓
-   ┌──────────────┐
-   │  Flyweight   │ (Interface)
-   ├──────────────┤
-   │+ operation(  │
-   │  extrinsic)  │
-   └──────────────┘
-          △
-          │ implements
-          │
-   ┌──────────────────┐
-   │ConcreteFlyweight │
-   ├──────────────────┤
-   │- intrinsicState  │
-   │+ operation(      │
-   │  extrinsic)      │
-   └──────────────────┘
-```
-
-## 👥 شرکت‌کنندگان
-
-1. **Flyweight**: حالت intrinsic (ذاتی و مشترک) را ذخیره می‌کند
-2. **ConcreteFlyweight**: پیاده‌سازی Flyweight
-3. **FlyweightFactory**: Flyweights را ایجاد و مدیریت می‌کند
-4. **Client**: حالت extrinsic (بیرونی و منحصربه‌فرد) را نگه‌داری می‌کند
 
 ## ⚖️ پیامدها
 
