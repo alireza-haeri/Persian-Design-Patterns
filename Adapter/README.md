@@ -74,72 +74,6 @@ analytics.Analyze(xmlData); // کار می‌کند!
 - ✅ انعطاف‌پذیری کامل
 - ✅ می‌توانید چند آداپتور داشته باشید
 
-## 📊 ساختار
-
-```mermaid
-classDiagram
-    class ITarget {
-        <<interface>> 🎯
-        +Request() string
-    }
-    
-    class Client {
-        +DoWork() 👤
-    }
-    
-    class Adapter {
-        -adaptee: Adaptee
-        +Request() string 🔌
-    }
-    
-    class Adaptee {
-        +SpecificRequest() string 🔧
-    }
-    
-    Client --> ITarget : استفاده می‌کند
-    ITarget <|.. Adapter : پیاده‌سازی
-    Adapter o-- Adaptee : استفاده می‌کند
-    
-    note for Adapter "رابط Target را به<br/>Adaptee تبدیل می‌کند"
-    note for Adaptee "کلاس موجود با<br/>رابط متفاوت"
-```
-
-### دو نوع Adapter:
-
-#### 1. Object Adapter (ترکیب - Composition)
-```mermaid
-classDiagram
-    class Adapter {
-        -adaptee: Adaptee
-        +Request()
-    }
-    class Adaptee {
-        +SpecificRequest()
-    }
-    Adapter o-- Adaptee : has-a
-    
-    note for Adapter "از Composition استفاده می‌کند<br/>(توصیه می‌شود)"
-```
-
-#### 2. Class Adapter (وراثت - Inheritance)
-```mermaid
-classDiagram
-    class Adapter {
-        +Request()
-        +SpecificRequest()
-    }
-    class ITarget {
-        <<interface>>
-        +Request()
-    }
-    class Adaptee {
-        +SpecificRequest()
-    }
-    ITarget <|.. Adapter
-    Adaptee <|-- Adapter : is-a
-    
-    note for Adapter "از وراثت چندگانه استفاده می‌کند<br/>(در C# محدودیت دارد)"
-```
 
 ## 💻 پیاده‌سازی با C#
 
@@ -451,16 +385,6 @@ public class CachedAdapter : ITarget
     }
 }
 ```
-
-## 🆚 مقایسه با الگوهای مشابه
-
-| ویژگی | Adapter | Bridge | Decorator | Facade |
-|-------|---------|---------|-----------|--------|
-| هدف | **تبدیل** رابط | **جدا کردن** abstraction | **افزودن** قابلیت | **ساده‌سازی** |
-| زمان | **بعد** از طراحی | **قبل** از طراحی | هر زمان | هر زمان |
-| ساختار | رابط را تغییر می‌دهد | دو سلسله‌مراتب | رابط را حفظ می‌کند | یک رابط ساده |
-| کاربرد | سازگاری | انعطاف | ویژگی جدید | یکپارچه‌سازی |
-
 ## 📚 ارتباط با الگوهای دیگر
 
 ```mermaid
