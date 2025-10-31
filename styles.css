@@ -1,6 +1,6 @@
 /* ========================================
    🎨 Modern Design Patterns Repository
-   نسخه 2.0 - بهبود یافته و مدرن
+   نسخه 2.0 - بهبود یافته برای هر دو صفحه
 ======================================== */
 
 /* ============ متغیرهای رنگی ============ */
@@ -43,11 +43,6 @@
     --error: #ef4444;
     --info: #3b82f6;
     
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-    --gradient-accent: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
-    --gradient-surface: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
-    
     /* انتقال‌ها */
     --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -73,36 +68,29 @@
 
 /* ============ حالت تاریک ============ */
 [data-theme="dark"] {
-    /* پس‌زمینه‌ها */
     --bg-primary: #0f172a;
     --bg-secondary: #1e293b;
     --bg-tertiary: #334155;
     --surface: #1e293b;
     --surface-elevated: #334155;
     
-    /* متن‌ها */
     --text-primary: #f1f5f9;
     --text-secondary: #cbd5e1;
     --text-tertiary: #94a3b8;
     --text-inverse: #0f172a;
     
-    /* مرزها */
     --border-light: #334155;
     --border-medium: #475569;
     --border-dark: #64748b;
     
-    /* سایه‌ها - تیره‌تر */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
     --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-    
-    /* Gradients برای Dark Mode */
-    --gradient-surface: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
 }
 
-/* ============ Reset و Base Styles ============ */
+/* ============ Reset ============ */
 *,
 *::before,
 *::after {
@@ -131,13 +119,27 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     line-height: 1.3;
     color: var(--text-primary);
+}
+
+h1 { 
+    font-size: clamp(2rem, 5vw, 3.5rem); 
     margin-bottom: var(--spacing-md);
 }
 
-h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
-h2 { font-size: clamp(1.5rem, 4vw, 2.25rem); }
-h3 { font-size: clamp(1.25rem, 3vw, 1.75rem); }
-h4 { font-size: clamp(1.1rem, 2.5vw, 1.4rem); }
+h2 { 
+    font-size: clamp(1.5rem, 4vw, 2.25rem); 
+    margin-bottom: var(--spacing-lg);
+}
+
+h3 { 
+    font-size: clamp(1.25rem, 3vw, 1.75rem); 
+    margin-bottom: var(--spacing-md);
+}
+
+h4 { 
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem); 
+    margin-bottom: var(--spacing-md);
+}
 
 p {
     color: var(--text-secondary);
@@ -168,18 +170,19 @@ a:hover {
     }
 }
 
-/* ============ Header - مدرن و جذاب ============ */
+/* ============ Header - برای هر دو صفحه ============ */
 header {
     position: relative;
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     color: var(--text-inverse);
     padding: var(--spacing-3xl) 0;
     text-align: center;
     overflow: hidden;
     box-shadow: var(--shadow-2xl);
+    margin-bottom: var(--spacing-2xl); /* فاصله از بخش پایین */
 }
 
-/* بک‌گراند انیمیشن دار */
+/* انیمیشن بک‌گراند */
 header::before {
     content: '';
     position: absolute;
@@ -195,25 +198,36 @@ header::before {
     50% { transform: translateY(-20px); }
 }
 
+/* امواج پایین هدر */
 header::after {
     content: '';
     position: absolute;
-    bottom: 0;
+    bottom: -1px;
     left: 0;
     right: 0;
-    height: 100px;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120"><path fill="white" fill-opacity="0.1" d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,58.7C960,64,1056,64,1152,58.7C1248,53,1344,43,1392,37.3L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"></path></svg>') no-repeat bottom;
+    height: 80px;
+    background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120"%3E%3Cpath fill="%23ffffff" fill-opacity="1" d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,58.7C960,64,1056,64,1152,58.7C1248,53,1344,43,1392,37.3L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"%3E%3C/path%3E%3C/svg%3E') no-repeat bottom;
     background-size: cover;
 }
 
+/* برای Dark Mode */
+[data-theme="dark"] header::after {
+    background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120"%3E%3Cpath fill="%230f172a" fill-opacity="1" d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,58.7C960,64,1056,64,1152,58.7C1248,53,1344,43,1392,37.3L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"%3E%3C/path%3E%3C/svg%3E') no-repeat bottom;
+    background-size: cover;
+}
+
+header .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* آیکون اصلی - فقط در صفحات پترن */
 header .icon {
     font-size: clamp(3rem, 8vw, 5rem);
     margin-bottom: var(--spacing-md);
     display: inline-block;
     animation: bounce 2s ease-in-out infinite;
     filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
-    position: relative;
-    z-index: 1;
 }
 
 @keyframes bounce {
@@ -223,20 +237,18 @@ header .icon {
 
 header h1 {
     color: var(--text-inverse);
-    margin-bottom: var(--spacing-sm);
     font-weight: 800;
     letter-spacing: -0.02em;
-    position: relative;
-    z-index: 1;
     text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    margin-bottom: var(--spacing-sm);
 }
 
+header p,
 header .subtitle {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.95);
     font-size: clamp(1rem, 2.5vw, 1.3rem);
     font-weight: 500;
-    position: relative;
-    z-index: 1;
+    margin-bottom: 0;
 }
 
 header .badge {
@@ -249,12 +261,10 @@ header .badge {
     border-radius: var(--radius-full);
     font-weight: 600;
     color: var(--text-inverse);
-    position: relative;
-    z-index: 1;
     box-shadow: var(--shadow-lg);
 }
 
-/* ============ Theme Toggle - مدرن ============ */
+/* ============ Theme Toggle ============ */
 .theme-toggle {
     position: fixed;
     top: var(--spacing-lg);
@@ -286,7 +296,7 @@ header .badge {
     transform: scale(0.95);
 }
 
-/* ============ Back Button - مدرن ============ */
+/* ============ Back Button ============ */
 .back-btn {
     display: inline-flex;
     align-items: center;
@@ -303,7 +313,7 @@ header .badge {
 }
 
 .back-btn:hover {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: var(--text-inverse);
     border-color: transparent;
     transform: translateX(-8px);
@@ -319,9 +329,249 @@ header .badge {
     transform: translateX(-4px);
 }
 
-/* ============ Category Headers - خیلی مدرن ============ */
+/* ============ Main Content ============ */
+main {
+    padding-top: var(--spacing-xl);
+    padding-bottom: var(--spacing-3xl);
+}
+
+/* ============ Sections ============ */
+.section,
+.intro-section,
+.learning-path-section {
+    background: var(--surface);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-2xl);
+    margin-bottom: var(--spacing-2xl);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+}
+
+.section:hover,
+.intro-section:hover,
+.learning-path-section:hover {
+    border-color: var(--border-medium);
+    box-shadow: var(--shadow-lg);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    color: var(--primary);
+    margin-bottom: var(--spacing-lg);
+}
+
+.section-title span:first-child {
+    font-size: 2rem;
+}
+
+.section-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-xl);
+    line-height: 1.7;
+}
+
+/* ============ Intro Content ============ */
+.intro-content p {
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: var(--text-secondary);
+}
+
+.intro-content strong {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+/* ============ Benefits Grid ============ */
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+    margin: var(--spacing-xl) 0;
+}
+
+.benefit-card {
+    background: var(--bg-secondary);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-xl);
+    border: 2px solid var(--border-light);
+    text-align: center;
+    transition: all var(--transition-base);
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary);
+}
+
+.benefit-icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-md);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.benefit-card h4 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.benefit-card p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ============ Audience Info ============ */
+.audience-info {
+    background: var(--bg-secondary);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-xl);
+    border: 2px solid var(--border-light);
+    margin-top: var(--spacing-xl);
+}
+
+.audience-info h3 {
+    color: var(--primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.audience-info ul {
+    list-style: none;
+    padding: 0;
+}
+
+.audience-info li {
+    padding: var(--spacing-md) 0;
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-light);
+    transition: padding var(--transition-fast);
+}
+
+.audience-info li:hover {
+    padding-right: var(--spacing-sm);
+    color: var(--text-primary);
+}
+
+.audience-info li:last-child {
+    border-bottom: none;
+}
+
+.audience-info strong {
+    color: var(--text-primary);
+}
+
+/* ============ Learning Levels ============ */
+.learning-levels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--spacing-xl);
+    margin: var(--spacing-xl) 0;
+}
+
+.level-card {
+    background: var(--bg-secondary);
+    padding: var(--spacing-2xl);
+    border-radius: var(--radius-2xl);
+    border: 3px solid;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-md);
+}
+
+.level-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-2xl);
+}
+
+.level-beginner {
+    border-color: var(--success);
+}
+
+.level-intermediate {
+    border-color: var(--warning);
+}
+
+.level-advanced {
+    border-color: var(--error);
+}
+
+.level-card h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.level-card h3 span:first-child {
+    font-size: 1.5rem;
+}
+
+.level-description {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: var(--spacing-lg);
+}
+
+.level-card ol {
+    padding-right: var(--spacing-xl);
+    margin: 0;
+}
+
+.level-card li {
+    margin: var(--spacing-md) 0;
+    line-height: 1.8;
+    color: var(--text-secondary);
+}
+
+.level-card li a {
+    color: var(--primary);
+    font-weight: 600;
+    transition: all var(--transition-fast);
+}
+
+.level-card li a:hover {
+    color: var(--primary-light);
+    text-decoration: underline;
+}
+
+/* ============ Learning Tip ============ */
+.learning-tip {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+    padding: var(--spacing-xl) var(--spacing-2xl);
+    border-radius: var(--radius-2xl);
+    border: 3px solid var(--primary);
+    border-right-width: 8px;
+    margin-top: var(--spacing-2xl);
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    text-align: center;
+    box-shadow: var(--shadow-xl);
+    transition: all var(--transition-base);
+}
+
+.learning-tip:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-2xl);
+}
+
+.learning-tip strong {
+    color: var(--primary);
+}
+
+/* ============ Category Headers ============ */
 .category-header {
     position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
     padding: var(--spacing-xl) var(--spacing-2xl);
     margin: var(--spacing-2xl) 0 var(--spacing-xl);
     border-radius: var(--radius-2xl);
@@ -330,6 +580,7 @@ header .badge {
     box-shadow: var(--shadow-lg);
     transition: all var(--transition-base);
     overflow: hidden;
+    font-size: clamp(1.5rem, 3vw, 2rem);
 }
 
 .category-header::before {
@@ -376,43 +627,24 @@ header .badge {
     background: linear-gradient(135deg, var(--error), #f87171);
 }
 
-.category-header h2 {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
-    margin: 0;
-    font-size: clamp(1.5rem, 3vw, 2rem);
-}
-
 .category-icon {
     font-size: clamp(2rem, 4vw, 2.5rem);
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
-.level-description {
-    position: relative;
-    z-index: 1;
-    margin-top: var(--spacing-md);
-    color: var(--text-secondary);
-    font-size: 1.05rem;
-    line-height: 1.7;
-}
-
-/* ============ Pattern Cards - کاملاً مدرن ============ */
+/* ============ Pattern Cards Grid ============ */
 .patterns-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
     gap: var(--spacing-xl);
-    margin-bottom: var(--spacing-3xl);
+    margin-bottom: var(--spacing-2xl);
 }
 
 .pattern-card {
     position: relative;
     background: var(--surface);
     border: 2px solid var(--border-light);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-2xl);
     padding: var(--spacing-2xl);
     transition: all var(--transition-slow);
     cursor: pointer;
@@ -425,8 +657,8 @@ header .badge {
     content: '';
     position: absolute;
     inset: -2px;
-    background: var(--gradient-primary);
-    border-radius: var(--radius-xl);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: var(--radius-2xl);
     opacity: 0;
     transition: opacity var(--transition-base);
     z-index: -1;
@@ -440,10 +672,10 @@ header .badge {
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--gradient-surface);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
     opacity: 0;
     transition: opacity var(--transition-base);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-2xl);
 }
 
 .pattern-card:hover::after {
@@ -463,7 +695,7 @@ header .badge {
     left: var(--spacing-lg);
     width: 52px;
     height: 52px;
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
     border-radius: var(--radius-full);
     display: flex;
     align-items: center;
@@ -513,7 +745,7 @@ header .badge {
     z-index: 1;
 }
 
-/* ============ Buttons - مدرن و زیبا ============ */
+/* ============ Pattern Links / Buttons ============ */
 .pattern-links {
     display: flex;
     gap: var(--spacing-md);
@@ -551,7 +783,7 @@ header .badge {
 }
 
 .btn-primary {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: var(--text-inverse);
     box-shadow: var(--shadow-md);
 }
@@ -573,8 +805,9 @@ header .badge {
     transform: translateY(-2px);
 }
 
-/* ============ Badges - مدرن ============ */
-.badge, .category-badge {
+/* ============ Category Badges ============ */
+.badge,
+.category-badge {
     display: inline-block;
     padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--radius-full);
@@ -603,11 +836,12 @@ header .badge {
     border-color: rgba(236, 72, 153, 0.3);
 }
 
-.badge:hover {
+.badge:hover,
+.category-badge:hover {
     transform: scale(1.05);
 }
 
-/* ============ Content Sections ============ */
+/* ============ Content Sections (صفحات پترن) ============ */
 #content section {
     background: var(--surface);
     border-radius: var(--radius-2xl);
@@ -643,7 +877,8 @@ header .badge {
     margin-bottom: var(--spacing-lg);
 }
 
-#content ul, #content ol {
+#content ul,
+#content ol {
     margin: var(--spacing-lg) 0;
     padding-right: var(--spacing-xl);
 }
@@ -658,7 +893,12 @@ header .badge {
     color: var(--primary);
 }
 
-/* ============ Code Blocks - عالی و قابل خواندن ============ */
+#content strong {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+/* ============ Code Blocks ============ */
 pre {
     background: #282c34 !important;
     border-radius: var(--radius-xl) !important;
@@ -689,7 +929,7 @@ code {
     color: var(--primary);
 }
 
-/* ============ Tables - مدرن ============ */
+/* ============ Tables ============ */
 table {
     width: 100%;
     border-collapse: separate;
@@ -701,7 +941,7 @@ table {
 }
 
 thead {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: var(--text-inverse);
 }
 
@@ -730,12 +970,12 @@ tbody tr:last-child td {
     border-bottom: none;
 }
 
-/* ============ Blockquote - زیبا ============ */
+/* ============ Blockquote ============ */
 blockquote {
     position: relative;
     padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-xl) var(--spacing-2xl);
     margin: var(--spacing-xl) 0;
-    background: var(--gradient-surface);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
     border-right: 4px solid var(--primary);
     border-radius: var(--radius-lg);
     font-style: italic;
@@ -777,7 +1017,7 @@ blockquote strong {
     border: 2px solid var(--border-light);
 }
 
-/* ============ Navigation ============ */
+/* ============ Navigation (صفحات پترن) ============ */
 .pattern-navigation {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -800,7 +1040,7 @@ blockquote strong {
 }
 
 .nav-btn:hover {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: var(--text-inverse);
     border-color: transparent;
     transform: translateY(-4px);
@@ -848,6 +1088,7 @@ footer {
 footer p {
     color: var(--text-secondary);
     font-size: 1.05rem;
+    margin-bottom: var(--spacing-md);
 }
 
 .footer-links {
@@ -881,6 +1122,7 @@ footer p {
     
     header {
         padding: var(--spacing-2xl) 0;
+        margin-bottom: var(--spacing-xl);
     }
     
     .theme-toggle {
@@ -895,13 +1137,17 @@ footer p {
     }
     
     .category-header {
-        padding: var(--spacing-lg) var(--spacing-lg);
+        padding: var(--spacing-lg);
+        font-size: 1.3rem;
     }
     
     .pattern-card {
         padding: var(--spacing-lg);
     }
     
+    .section,
+    .intro-section,
+    .learning-path-section,
     #content section {
         padding: var(--spacing-lg);
     }
@@ -911,6 +1157,11 @@ footer p {
     }
     
     .pattern-navigation {
+        grid-template-columns: 1fr;
+    }
+    
+    .benefits-grid,
+    .learning-levels {
         grid-template-columns: 1fr;
     }
 }
@@ -926,14 +1177,13 @@ footer p {
     }
 }
 
-/* Focus states */
 *:focus-visible {
     outline: 3px solid var(--primary);
     outline-offset: 2px;
     border-radius: var(--radius-sm);
 }
 
-/* ============ انیمیشن‌های اضافی ============ */
+/* ============ انیمیشن‌های ورودی ============ */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -953,6 +1203,8 @@ footer p {
 .pattern-card:nth-child(2) { animation-delay: 0.2s; }
 .pattern-card:nth-child(3) { animation-delay: 0.3s; }
 .pattern-card:nth-child(4) { animation-delay: 0.4s; }
+.pattern-card:nth-child(5) { animation-delay: 0.5s; }
+.pattern-card:nth-child(6) { animation-delay: 0.6s; }
 
 /* ============ Selection ============ */
 ::selection {
