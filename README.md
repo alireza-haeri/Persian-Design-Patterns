@@ -1,5 +1,17 @@
 # 🎨 الگوهای طراحی (Design Patterns)
 
+<div align="center">
+
+![Persian](https://img.shields.io/badge/Language-Persian-blue)
+![C#](https://img.shields.io/badge/Language-C%23-239120?logo=c-sharp)
+![.NET](https://img.shields.io/badge/.NET-512BD4?logo=.net)
+![Mermaid](https://img.shields.io/badge/Diagrams-Mermaid-ff3670)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Patterns](https://img.shields.io/badge/Patterns-22-orange)
+![Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-brightgreen)
+
+</div>
+
 > **مرجع کامل 22 الگوی طراحی کلاسیک با مثال‌های C# و نمودارهای Mermaid**
 
 ## 🤔 الگوهای طراحی چیست؟
@@ -178,6 +190,11 @@ Dp/
 3. ✍️ تغییرات را Commit کنید (`git commit -am 'Add improvement'`)
 4. 📤 Push کنید (`git push origin feature/improvement`)
 5. 🎉 Pull Request ایجاد کنید
+
+📖 **برای جزئیات بیشتر، [راهنمای مشارکت](CONTRIBUTING.md) را مطالعه کنید.**
+
+### 📜 قوانین رفتاری
+لطفاً [قوانین رفتاری](CODE_OF_CONDUCT.md) جامعه ما را مطالعه و رعایت کنید.
 
 ---
 
