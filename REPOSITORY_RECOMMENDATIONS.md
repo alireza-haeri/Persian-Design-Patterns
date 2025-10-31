@@ -71,10 +71,11 @@ https://alireza-haeri.github.io/Persian-Design-Patterns/
 ## ⚠️ نکته مهم
 
 بعد از تغییر نام، GitHub به‌طور خودکار redirect از نام قدیم به نام جدید ایجاد می‌کند، اما بهتر است:
-- لینک‌های داخلی ریپو را بررسی کنید (در footer.js و README.md قبلاً آپدیت شده‌اند)
-- اگر کسی ریپو را clone کرده، با دستور زیر remote URL را آپدیت کند:
+- لینک‌های داخلی ریپو را بررسی کنید
+- **بعد از تغییر نام ریپو**، اگر کسی ریپو را clone کرده، با دستور زیر remote URL را آپدیت کند:
 
 ```bash
+# فقط بعد از تغییر نام واقعی ریپو در GitHub
 git remote set-url origin https://github.com/alireza-haeri/Persian-Design-Patterns.git
 ```
 

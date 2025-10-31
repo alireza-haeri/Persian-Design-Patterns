@@ -19,7 +19,9 @@
 
 ## 🚀 مشاهده آنلاین
 
-**[👉 کلیک کنید و شروع کنید](https://alireza-haeri.github.io/Persian-Design-Patterns/)**
+**[👉 کلیک کنید و شروع کنید](https://alireza-haeri.github.io/Dp/)**
+
+> 💡 بعد از تغییر نام ریپو به `Persian-Design-Patterns`، این لینک به‌طور خودکار کار خواهد کرد.
 
 یا فایل `index.html` را در مرورگر خود باز کنید.
 
