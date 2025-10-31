@@ -1,0 +1,51 @@
+# EditorConfig - تنظیمات یکپارچه ویرایشگر
+# https://editorconfig.org
+
+# تنظیمات ریشه - بالاترین سطح
+root = true
+
+# تنظیمات برای همه فایل‌ها
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# فایل‌های Markdown - فضای خالی در انتها را نگه دار
+[*.md]
+trim_trailing_whitespace = false
+
+# فایل‌های C# - تنظیمات مایکروسافت
+[*.cs]
+indent_size = 4
+indent_style = space
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+
+# فایل‌های HTML/CSS/JS
+[*.{html,css,js}]
+indent_size = 4
+
+# فایل‌های JSON/YAML - indent کوچک‌تر
+[*.{json,yml,yaml}]
+indent_size = 2
+
+# فایل‌های پیکربندی
+[*.{config,props,targets,nuspec,resx}]
+indent_size = 2
+
+# Makefiles - از Tab استفاده کن
+[Makefile]
+indent_style = tab
+
+# فایل‌های Batch/Shell
+[*.{bat,cmd,sh}]
+end_of_line = lf
+
+# فایل‌های خاص ویندوز
+[*.{ps1,psm1,psd1}]
+end_of_line = crlf
