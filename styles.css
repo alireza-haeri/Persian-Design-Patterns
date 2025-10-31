@@ -172,7 +172,6 @@ a:hover {
 
 /* ============ Header - برای هر دو صفحه ============ */
 header {
-    position: relative;
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     color: var(--text-inverse);
     padding: var(--spacing-3xl) 0;
