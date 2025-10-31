@@ -176,47 +176,6 @@ class Program
 - **تعداد کلاس‌ها**: برای هر عملیات یک کلاس فرمان جدید
 - **پیچیدگی**: ممکن است برای عملیات ساده، بیش از حد پیچیده باشد
 
-## 📊 نمودار کلاس
-
-```mermaid
-classDiagram
-    class ICommand {
-        <<interface>>
-        +Execute()
-        +Undo()
-    }
-    
-    class RemoteControl {
-        -Stack~ICommand~ history
-        +ExecuteCommand(command)
-        +UndoLast()
-    }
-    
-    class LightOnCommand {
-        -Light light
-        +Execute()
-        +Undo()
-    }
-    
-    class LightOffCommand {
-        -Light light
-        +Execute()
-        +Undo()
-    }
-    
-    class Light {
-        -string location
-        -bool isOn
-        +TurnOn()
-        +TurnOff()
-    }
-    
-    ICommand <|.. LightOnCommand
-    ICommand <|.. LightOffCommand
-    LightOnCommand --> Light
-    LightOffCommand --> Light
-    RemoteControl --> ICommand
-```
 
 ## 🎯 کاربردهای واقعی
 
