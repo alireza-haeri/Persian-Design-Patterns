@@ -2,9 +2,6 @@
 
 > **مرجع کامل 22 الگوی طراحی کلاسیک به زبان فارسی**
 
-[![Persian](https://img.shields.io/badge/Language-Persian-blue.svg)](https://fa.wikipedia.org/wiki/%D8%B2%D8%A8%D8%A7%D9%86_%D9%81%D8%A7%D8%B1%D8%B3%DB%8C)
-[![C#](https://img.shields.io/badge/Code-C%23-239120.svg)](https://docs.microsoft.com/en-us/dotnet/csharp/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ## 📖 درباره
 
@@ -13,15 +10,12 @@
 - ✅ **22 الگوی کلاسیک** Gang of Four
 - 📝 **توضیحات روان فارسی** با سناریوهای واقعی
 - 💻 **مثال‌های کامل C#** در .NET
-- 📊 **نمودارهای تعاملی** با Mermaid
-- 🌐 **رابط کاربری مدرن** + Dark Mode
 - 🎯 **مسیر یادگیری مرحله‌به‌مرحله**
 
 ## 🚀 مشاهده آنلاین
 
-**[👉 کلیک کنید و شروع کنید](https://alireza-haeri.github.io/Dp/)**
+**[👉 کلیک کنید و شروع کنید](https://alireza-haeri.github.io/Persian-Design-Patterns)**
 
-> 💡 بعد از تغییر نام ریپو به `Persian-Design-Patterns`، این لینک به‌طور خودکار کار خواهد کرد.
 
 یا فایل `index.html` را در مرورگر خود باز کنید.
 
@@ -66,13 +60,9 @@
 
 مشارکت شما را خوش‌آمد می‌گوییم! برای مشارکت:
 
-1. Fork کنید
+1. ابتدا Fork کنید
 2. تغییرات را اعمال کنید
-3. Pull Request ایجاد کنید
-
-## 📄 لایسنس
-
-این پروژه تحت لایسنس MIT منتشر شده است.
+3. یک Pull Request ایجاد کنید
 
 ---
 
@@ -80,6 +70,5 @@
 
 **طراحی شده با ❤️ توسط [@alireza-haeri](https://github.com/alireza-haeri) برای برنامه‌نویسان فارسی‌زبان**
 
-[⭐ ستاره بدهید](https://github.com/alireza-haeri/Persian-Design-Patterns) • [🐛 گزارش مشکل](https://github.com/alireza-haeri/Persian-Design-Patterns/issues) • [💬 بازخورد](https://github.com/alireza-haeri/Persian-Design-Patterns/discussions)
-
+[⭐ ستاره بدین](https://github.com/alireza-haeri/Persian-Design-Patterns) • [🐛 گزارش مشکل](https://github.com/alireza-haeri/Persian-Design-Patterns/issues)
 </div>
