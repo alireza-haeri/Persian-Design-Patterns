@@ -43,52 +43,6 @@
 - میانجی تصمیم می‌گیرد کدام شیء باید پاسخ دهد
 - **Loose Coupling**: اشیاء به هم وابسته نیستند
 
-## 📊 ساختار
-
-```mermaid
-classDiagram
-    class IMediator {
-        <<interface>>
-        +Notify(sender, event) 🔔
-    }
-    
-    class ConcreteMediator {
-        -component1 📦
-        -component2 📦
-        -component3 📦
-        +Notify(sender, event) ✅
-    }
-    
-    class BaseComponent {
-        #mediator: IMediator
-        +SetMediator(mediator)
-        +Send(event) 📤
-    }
-    
-    class Component1 {
-        +OperationA() ⚡
-    }
-    
-    class Component2 {
-        +OperationB() ⚡
-    }
-    
-    class Component3 {
-        +OperationC() ⚡
-    }
-    
-    IMediator <|.. ConcreteMediator
-    BaseComponent <|-- Component1
-    BaseComponent <|-- Component2
-    BaseComponent <|-- Component3
-    BaseComponent o-- IMediator
-    ConcreteMediator --> Component1 : مدیریت می‌کند
-    ConcreteMediator --> Component2 : مدیریت می‌کند
-    ConcreteMediator --> Component3 : مدیریت می‌کند
-    
-    note for ConcreteMediator "میانجی تمام ارتباطات را<br/>هماهنگ می‌کند"
-    note for BaseComponent "اجزا فقط با میانجی<br/>ارتباط برقرار می‌کنند"
-```
 
 ## 💻 پیاده‌سازی با C#
 
@@ -328,25 +282,6 @@ flight2.RequestTakeoff();
 4. **سیستم‌های توزیع‌شده**: Message Broker (RabbitMQ, Kafka)
 5. **بازی‌ها**: مدیریت تعاملات بین شخصیت‌ها و اشیاء
 6. **Smart Home**: هماهنگی بین دستگاه‌های هوشمند
-
-## 💡 تفاوت با الگوهای مشابه
-
-### Mediator vs Observer
-
-| ویژگی | Mediator | Observer |
-|-------|----------|----------|
-| ارتباط | **دو طرفه** | **یک طرفه** |
-| هدف | کاهش وابستگی | اطلاع‌رسانی |
-| مدیریت | **متمرکز** | **پراکنده** |
-| پیچیدگی | میانجی پیچیده | Subject ساده |
-
-### Mediator vs Facade
-
-| ویژگی | Mediator | Facade |
-|-------|----------|--------|
-| ارتباط | **دو طرفه** بین اجزا | **یک طرفه** از Client |
-| اجزا | اجزا از میانجی **آگاهند** | Subsystem از Facade **بی‌خبر** |
-| هدف | کاهش **وابستگی متقابل** | ساده‌سازی **رابط** |
 
 ## 🔑 نکته کلیدی
 
