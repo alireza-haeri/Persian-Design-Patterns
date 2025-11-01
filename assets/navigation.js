@@ -80,7 +80,6 @@ function createNavigationButtons() {
                         <span class="nav-label">الگوی بعدی</span>
                         <span class="nav-title">${next.icon} ${next.title}</span>
                     </div>
-                    <span style="font-size: 1.5rem;">←</span>
                 </a>
             ` : `
                 <div class="nav-btn next disabled">
@@ -88,13 +87,11 @@ function createNavigationButtons() {
                         <span class="nav-label">الگوی بعدی</span>
                         <span class="nav-title">آخرین الگو</span>
                     </div>
-                    <span style="font-size: 1.5rem;">←</span>
                 </div>
             `}
             
             ${prev ? `
                 <a href="../${prev.folder}/index.html" class="nav-btn prev">
-                    <span style="font-size: 1.5rem;">→</span>
                     <div class="nav-info">
                         <span class="nav-label">الگوی قبلی</span>
                         <span class="nav-title">${prev.icon} ${prev.title}</span>
@@ -102,7 +99,6 @@ function createNavigationButtons() {
                 </a>
             ` : `
                 <div class="nav-btn prev disabled">
-                    <span style="font-size: 1.5rem;">→</span>
                     <div class="nav-info">
                         <span class="nav-label">الگوی قبلی</span>
                         <span class="nav-title">اولین الگو</span>
