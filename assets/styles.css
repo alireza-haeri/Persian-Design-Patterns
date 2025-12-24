@@ -859,6 +859,12 @@ main {
     border-color: rgba(236, 72, 153, 0.3);
 }
 
+.badge-architectural {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(14, 165, 233, 0.25));
+    color: #0ea5e9;
+    border-color: rgba(14, 165, 233, 0.3);
+}
+
 .badge:hover,
 .category-badge:hover {
     transform: scale(1.05);

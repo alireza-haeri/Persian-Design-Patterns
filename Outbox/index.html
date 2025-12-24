@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outbox - الگوهای طراحی فارسی</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        /* استایل‌های اختصاصی برای رنگ اکسنت الگوی Outbox */
+        :root {
+            --primary: #f59e0b;
+        }
+        .badge {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()"><span id="theme-icon">🌙</span></button>
+    <a href="../index.html" class="home-btn" title="بازگشت به صفحه اصلی">🏠</a>
+    <div class="container">
+        <header>
+            <div class="icon">📬</div>
+            <h1>Outbox</h1>
+            <p class="subtitle">ارسال مطمئن پیام</p>
+            <span class="badge">معماری</span>
+        </header>
+        <main id="content"><p>در حال بارگذاری...</p></main>
+        <footer></footer>
+    </div>
+    <script src="../assets/script.js"></script>
+    <script>
+        // بارگذاری محتوا هنگام آماده شدن صفحه
+        loadContent();
+    </script>
+    <script src="../assets/navigation.js"></script>
+    <script src="../assets/footer.js"></script>
+</body>
+</html>

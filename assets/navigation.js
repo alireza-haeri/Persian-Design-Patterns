@@ -31,7 +31,9 @@ const learningPath = [
     { folder: 'Mediator', title: 'Mediator', category: 'پیشرفته', icon: '🤝' },
     { folder: 'Memento', title: 'Memento', category: 'پیشرفته', icon: '📸' },
     { folder: 'State', title: 'State', category: 'پیشرفته', icon: '🎭' },
-    { folder: 'Visitor', title: 'Visitor', category: 'پیشرفته', icon: '👤' }
+    { folder: 'Visitor', title: 'Visitor', category: 'پیشرفته', icon: '👤' },
+    { folder: 'CQRS', title: 'CQRS', category: 'معماری', icon: '⚡' },
+    { folder: 'Outbox', title: 'Outbox', category: 'معماری', icon: '📬' }
 ];
 
 /**
